@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 class Book extends Component {
   render() {
-    const { title, authors, } = this.props.book;
+    const { title, authors } = this.props.book;
     const { thumbnail } = this.props.book.imageLinks;
 
     return (
@@ -32,7 +32,9 @@ class Book extends Component {
           </div>
           <div className="book-title">{title}</div>
           <div className="book-authors">
-              { authors.map((author) => (author)) }
+              { Array.isArray(authors)
+                  ? authors.map( (author) => author)
+                  : '[No author found]' }
           </div>
         </div>
       </li>
@@ -42,6 +44,7 @@ class Book extends Component {
 
 Book.propTypes = {
   book: PropTypes.object.isRequired,
+  handleUpdateShelf: PropTypes.func
 }
 
-export default Book;
+export default Book

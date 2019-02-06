@@ -1,30 +1,30 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import PropTypes from 'prop-types'
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import PropTypes from "prop-types";
 
 /**
  * TODO: doc
  */
 function MessageDialog(props) {
-  const [ open, setOpen ] = React.useState(false);
+  const [open, setOpen] = useState(false)
 
   /**
    * TODO: doc
    */
   function handleClickOpen() {
-    setOpen(true);
+    setOpen(true)
   }
 
   /**
    * TODO: doc
    */
   function handleClose() {
-    setOpen(false);
+    setOpen(false)
   }
 
   /**
@@ -53,20 +53,22 @@ function MessageDialog(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          { (!props.buttons || props.buttons.length === 0) && (
-            <Button onClick={handleClose}
-                    color="primary" autoFocus>
+          {(!props.buttons || props.buttons.length === 0) && (
+            <Button onClick={handleClose} color="primary" autoFocus>
               OK
             </Button>
           )}
-          { (props.buttons && props.buttons.length > 0) && (
-            props.buttons.map( (button) => {
-              return <Button onClick={handleCustom.bind(this, button.handleClick)}
-                      color={button.color ? button.color : "primary"}>
-                {Button.text}
-              </Button>
-            })
-          )}
+          {(props.buttons && props.buttons.length > 0) &&
+            (props.buttons.map(button => {
+              return (
+                <Button
+                  onClick={handleCustom.bind(this, button.handleClick)}
+                  color={button.color ? button.color : "primary"}
+                >
+                  {Button.text}
+                </Button>
+              )
+            }))}
         </DialogActions>
       </Dialog>
     </div>
@@ -79,4 +81,4 @@ MessageDialog.propTypes = {
   buttons: PropTypes.array
 }
 
-export default MessageDialog;
+export default MessageDialog
