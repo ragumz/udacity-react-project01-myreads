@@ -44,7 +44,7 @@ class App extends Component {
         //this.setState(() => ({ error }))
         console.log(error.stack);
       });
-  }
+  };
 
   componentDidMount() {
     this.onLoadAllBooks();
@@ -69,4 +69,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App;

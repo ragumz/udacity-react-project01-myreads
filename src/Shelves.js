@@ -28,6 +28,6 @@ class Shelves extends Component {
 Shelves.propTypes = {
   shelves: PropTypes.object.isRequired,
   handleUpdateShelf: PropTypes.func
-}
+};
 
-export default Shelves
+export default Shelves;

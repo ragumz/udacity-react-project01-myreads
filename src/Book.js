@@ -45,6 +45,6 @@ class Book extends Component {
 Book.propTypes = {
   book: PropTypes.object.isRequired,
   handleUpdateShelf: PropTypes.func
-}
+};
 
-export default Book
+export default Book;

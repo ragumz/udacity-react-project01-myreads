@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
  */
 class SearchInput extends Component {
   state = {
-    query: ""
+    query: ''
   };
 
   handleQueryState = event => {
@@ -35,8 +35,8 @@ class SearchInput extends Component {
           */}
         <form onSubmit={this.handleSubmit}>
           <input
-            type="text"
-            placeholder="Search by title or author"
+            type='text'
+            placeholder='Search by title or author'
             value={this.state.query}
             onChange={event => this.handleQueryState(event)}
           />

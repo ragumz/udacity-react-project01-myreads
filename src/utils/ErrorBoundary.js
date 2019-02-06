@@ -24,23 +24,23 @@ class ErrorBoundary extends Component {
 
   handleEventError = (msg, url, line, col, error) => {
     this.setState({ hasError: true, error })
-  }
+  };
 
   componentDidMount() {
     window.onerror = this.handleEventError.bind(this)
-  }
+  };
 
   componentDidCatch(error, info) {
     this.setState({ hasError: true, error })
-  }
+  };
 
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return <MessageDialog title='ERROR' message={this.state.error.stack} />
+      return <MessageDialog title='ERROR' message={this.state.error.stack} />;
     }
-    return this.props.children
-  }
+    return this.props.children;
+  };
 }
 
 export default ErrorBoundary

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import Book from './Book'
 import * as BooksAPI from './utils/BooksAPI'
 import SearchInput from './SearchInput'
+import MessageDialog from './utils/MessageDialog'
 
 /**
  *
@@ -12,7 +13,7 @@ import SearchInput from './SearchInput'
 class BookSearch extends Component {
   state = {
     books: []
-  }
+  };
 
   handleSearchBooks = (query) => {
     BooksAPI.search(query)
@@ -30,7 +31,7 @@ class BookSearch extends Component {
         //this.setState(() => ({ error }))
         console.log(error.stack);
       })
-  }
+  };
 
   render() {
     return(
@@ -38,6 +39,7 @@ class BookSearch extends Component {
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <SearchInput handleSearchBooks={this.handleSearchBooks} />
+          <MessageDialog title='AVISO' message='Type search query!' />
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
@@ -54,6 +56,6 @@ class BookSearch extends Component {
 
 BookSearch.propTypes = {
   handleUpdateShelf: PropTypes.func
-}
+};
 
-export default BookSearch
+export default BookSearch;
