@@ -37,7 +37,7 @@ class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return <MessageDialog title='ERROR' message={this.state.error.stack} />;
+      return <MessageDialog title="ERROR" message={this.state.error.stack} />;
     }
     return this.props.children;
   };

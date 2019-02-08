@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import "./App.css";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import './App.css';
+import PropTypes from 'prop-types';
 import Book from './Book';
 
 /**
@@ -14,7 +14,11 @@ class Shelf extends Component {
         <div className="bookshelf-books">
           <ol className="books-grid">
             { Object.entries(this.props.shelf.books).map( ([key, object]) => (
-                <Book key={key} book={object} handleUpdateShelf={this.props.handleUpdateShelf} />
+                <Book
+                  key={key}
+                  book={object}
+                  shelfColor={this.props.shelf.bkgColor}
+                  handleUpdateShelf={this.props.handleUpdateShelf} />
               ))
             }
           </ol>
@@ -26,7 +30,7 @@ class Shelf extends Component {
 
 Shelf.propTypes = {
   shelf: PropTypes.object.isRequired,
-  handleUpdateShelf: PropTypes.func
+  handleUpdateShelf: PropTypes.func.isRequired
 };
 
 export default Shelf;

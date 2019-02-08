@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import "./App.css";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import './App.css';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
 import Shelf from './Shelf'
 
@@ -16,7 +16,10 @@ class Shelves extends Component {
         </div>
         <div className="list-books-content">
           {Object.entries(this.props.shelves).map(([key, object]) => (
-            <Shelf key={key} shelf={object} handleUpdateShelf={this.props.handleUpdateShelf} />
+            <Shelf
+              key={key}
+              shelf={object}
+              handleUpdateShelf={this.props.handleUpdateShelf} />
           ))}
         </div>
         <Link className="open-search" to="/search">Add a book</Link>
@@ -27,7 +30,7 @@ class Shelves extends Component {
 
 Shelves.propTypes = {
   shelves: PropTypes.object.isRequired,
-  handleUpdateShelf: PropTypes.func
+  handleUpdateShelf: PropTypes.func.isRequired
 };
 
 export default Shelves;

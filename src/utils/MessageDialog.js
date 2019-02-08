@@ -65,10 +65,11 @@ class MessageDialog extends Component {
               this.props.buttons.map(button => {
                 return (
                   <Button
+                    key={button.text}
                     onClick={this.handleCustom.bind(this, button.handleClick)}
                     color={button.color ? button.color : "primary"}
                   >
-                    {Button.text}
+                    {button.text}
                   </Button>
                 );
               })}

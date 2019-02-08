@@ -11,10 +11,12 @@ class SearchInput extends Component {
   };
 
   handleQueryState = event => {
-    const query = event.target.value.trim();
-    this.setState(() => ({
+    const query = event.target.value;
+    this.setState( () => ({
       query
     }));
+    if (query.trim() === '')
+      this.props.handleClearBooks();
   };
 
   handleSubmit = event => {
@@ -47,7 +49,8 @@ class SearchInput extends Component {
 }
 
 SearchInput.propTypes = {
-  handleSearchBooks: PropTypes.func.isRequired
+  handleSearchBooks: PropTypes.func.isRequired,
+  handleClearBooks: PropTypes.func.isRequired
 };
 
 export default SearchInput;
