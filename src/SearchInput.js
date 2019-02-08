@@ -37,6 +37,7 @@ class SearchInput extends Component {
           */}
         <form onSubmit={this.handleSubmit}>
           <input
+            autoFocus
             type='text'
             placeholder='Search by title or author'
             value={this.state.query}

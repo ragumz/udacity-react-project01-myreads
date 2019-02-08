@@ -18,7 +18,8 @@ class Shelf extends Component {
                   key={key}
                   book={object}
                   shelfColor={this.props.shelf.bkgColor}
-                  handleUpdateShelf={this.props.handleUpdateShelf} />
+                  handleUpdateShelf={this.props.handleUpdateShelf}
+                  handleSetMessage={this.props.handleSetMessage} />
               ))
             }
           </ol>
@@ -30,7 +31,8 @@ class Shelf extends Component {
 
 Shelf.propTypes = {
   shelf: PropTypes.object.isRequired,
-  handleUpdateShelf: PropTypes.func.isRequired
+  handleUpdateShelf: PropTypes.func.isRequired,
+  handleSetMessage: PropTypes.func.isRequired
 };
 
 export default Shelf;

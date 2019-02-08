@@ -11,33 +11,17 @@ import MessageDialog from './utils/MessageDialog'
  *
  */
 class BookSearch extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      books: [],
-      message: null,
-    };
-
-    this.oldShelfId = null;  //TODO resolver com atributo local ou state??
-    this.newShelfId = null;
-    this.changedBook = null;
-  }
+  state = {
+    books: {},
+    message: null,
+    newShelfId: null,
+    changedBook: null
+  };
 
   handleSearchBooks = (query) => {
     BooksAPI.search(query)
       .then( (resultBooks) => {
-        let books;
-        let message = null;
-        if (Array.isArray(resultBooks)) {
-          books = [...resultBooks];
-        } else {
-          books = [];
-          message = `No book found with title or author using query '${query}'`;
-        }
-        this.setState( () => ({
-          books,
-          message
-        }));
+        this.handleSearchBooksCallback(resultBooks, query);
       })
       .catch((error) => {
         this.setState( () => ({
@@ -47,29 +31,67 @@ class BookSearch extends Component {
       })
   };
 
+  handleSearchBooksCallback = (resultBooks, query) => {
+    let books;
+    let message = null;
+    if (Array.isArray(resultBooks)) {
+      books = resultBooks.reduce( (map, book) => {
+        //identify current shelf
+        Object.entries(this.props.shelves).forEach( ([skey, shelf]) => {
+          if (shelf.books[book['id']])
+            book['shelf'] = shelf.id;
+        });
+        map[book['id']] = book;
+        return map;
+      }, {});
+    } else {
+      books = {};
+      message = `No book found with title or author using query '${query}'`;
+    }
+    this.setState( () => ({
+      books,
+      message
+    }));
+  }
+
   handleOnUpdateShelfFinish = (error) => {
-    if (error === undefined && this.changedBook !== undefined) {
+    if (error === undefined) {
       this.setState( (currState) => {
-        currState.books[this.changedBook.id].shelf = this.newShelfId;
+        if (currState.changedBook !== undefined
+            && currState.changedBook.hasOwnProperty('id')) {
+          currState.books[currState.changedBook.id]['shelf'] = currState.newShelfId;
+        }
+        currState.newShelfId = null;
+        currState.changedBook = null;
         return currState;
       });
     }
-    this.oldShelfId = null;
-    this.newShelfId = null;
-    this.changedBook = null;
   };
 
   handleUpdateShelf = (newShelfId, book, handleCallback) => {
-    this.oldShelfId = book.shelf;
-    this.newShelfId = newShelfId;
-    this.changedBook = book;
+    this.setState( () => ({
+      newShelfId,
+      changedBook: book
+    }));
     this.props.handleUpdateShelf(newShelfId, book, handleCallback, this.handleOnUpdateShelfFinish);
   };
 
   handleClearBooks = () => {
     this.setState( () => ({
-      books: []
+      books: [],
+      newShelfId: null,
+      changedBook: null
     }));
+  };
+
+  handleClearMessage = () => {
+    this.handleSetMessage(null);
+  };
+
+  handleSetMessage = (message) => {
+    this.setState(() => ({
+      message
+    }))
   };
 
   render() {
@@ -84,27 +106,29 @@ class BookSearch extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            { this.state.books.map( (book) => (
+            { Object.entries(this.state.books).map( ([key, book]) => (
                 <Book
-                  key={book.id}
+                  key={key}
                   book={book}
-                  shelfColor={ book.shelf !== undefined ? this.props.shelves[book.shelf].bkgColor : undefined }
+                  shelfColor={book.shelf !== undefined ? this.props.shelves[book.shelf].bkgColor : undefined}
                   handleUpdateShelf={this.handleUpdateShelf}
+                  handleSetMessage={this.handleSetMessage}
                 />
               ))
             }
           </ol>
         </div>
-        { (this.state.message !== null) &&
-            <MessageDialog
+        { this.state.message !== null &&
+            (<MessageDialog
               title="INFORMATION"
               message={this.state.message}
-              buttons={ [{text: 'OK', handleClick: this.handleClearMessage}] } />
+              buttons={ [{text: 'OK', handleClick: this.handleClearMessage}] } />)
         }
       </div>
     )
   }
 }
+
 
 BookSearch.propTypes = {
   shelves: PropTypes.object.isRequired,

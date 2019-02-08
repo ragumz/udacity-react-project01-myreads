@@ -42,7 +42,7 @@ class MessageDialog extends Component {
     return (
       <div>
         <Dialog
-          open={this.state.open}
+          open={this.state.open && this.props.message !== null}
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
@@ -82,7 +82,7 @@ class MessageDialog extends Component {
 
 MessageDialog.propTypes = {
   title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string,
   buttons: PropTypes.array
 };
 

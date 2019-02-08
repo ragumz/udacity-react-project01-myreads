@@ -9,7 +9,9 @@ class Book extends Component {
     let { title, authors } = this.props.book;
     if (authors === undefined || authors === null)
       authors = ['[No author found]'];
-    const { thumbnail } = this.props.book.imageLinks;
+    let thumbnail = '';
+    if (this.props.book.imageLinks !== undefined)
+      thumbnail = this.props.book.imageLinks.thumbnail;
 
     return (
       <li>
@@ -24,7 +26,7 @@ class Book extends Component {
                   backgroundImage: `url("${thumbnail}")`
                 }}
               />
-              { (thumbnail === undefined || thumbnail === '') &&
+              { (thumbnail === null || thumbnail === '') &&
                   <div className="book-cover-text-centered">No Image</div>
               }
             </div>
@@ -32,6 +34,7 @@ class Book extends Component {
               book={this.props.book}
               shelfColor={this.props.shelfColor}
               handleUpdateShelf={this.props.handleUpdateShelf}
+              handleSetMessage={this.props.handleSetMessage}
             />
           </div>
           <div className="book-title">{title}</div>
@@ -47,7 +50,8 @@ class Book extends Component {
 Book.propTypes = {
   book: PropTypes.object.isRequired,
   shelfColor: PropTypes.string,
-  handleUpdateShelf: PropTypes.func.isRequired
+  handleUpdateShelf: PropTypes.func.isRequired,
+  handleSetMessage: PropTypes.func.isRequired
 };
 
 export default Book;

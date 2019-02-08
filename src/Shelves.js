@@ -15,11 +15,12 @@ class Shelves extends Component {
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          {Object.entries(this.props.shelves).map(([key, object]) => (
+          {Object.entries(this.props.shelves).map(([key, shelf]) => (
             <Shelf
               key={key}
-              shelf={object}
-              handleUpdateShelf={this.props.handleUpdateShelf} />
+              shelf={shelf}
+              handleUpdateShelf={this.props.handleUpdateShelf}
+              handleSetMessage={this.props.handleSetMessage} />
           ))}
         </div>
         <Link className="open-search" to="/search">Add a book</Link>
@@ -30,7 +31,8 @@ class Shelves extends Component {
 
 Shelves.propTypes = {
   shelves: PropTypes.object.isRequired,
-  handleUpdateShelf: PropTypes.func.isRequired
+  handleUpdateShelf: PropTypes.func.isRequired,
+  handleSetMessage: PropTypes.func.isRequired
 };
 
 export default Shelves;
