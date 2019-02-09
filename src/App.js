@@ -10,9 +10,9 @@ import * as Commons from './utils/Commons.js';
 import LoadingOverlay from 'react-loading-overlay';
 
 const INIT_SHELVES = {
-              read: {id: 'read', name: 'Read', bkgColor: '#60ac5d', books: {}},
-        wantToRead: {id: 'wantToRead', name: 'Want to Read', bkgColor: '#cccc00', books: {}},
-  currentlyReading: {id: 'currentlyReading', name: 'Currently Reading',  bkgColor: '#cc3300', books: {}},
+              read: {id: Constants.SHELF_ID_READ, name: 'Read', bkgColor: '#60ac5d', books: {}},
+        wantToRead: {id: Constants.SHELF_ID_WANTREAD, name: 'Want to Read', bkgColor: '#cccc00', books: {}},
+  currentlyReading: {id: Constants.SHELF_ID_CURRREAD, name: 'Currently Reading',  bkgColor: '#cc3300', books: {}},
 };
 
 /**

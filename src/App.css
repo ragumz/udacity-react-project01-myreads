@@ -189,6 +189,11 @@ button:active {
   cursor: pointer;
 }
 
+.book-shelf-details {
+  display: 'flex';
+  flexWrap: 'wrap';
+}
+
 /* book cover */
 
 .book-cover {

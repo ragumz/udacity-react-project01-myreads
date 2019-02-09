@@ -25,7 +25,7 @@ class MessageDialog extends Component {
   /**
    * TODO: doc
    */
-  handleClickOpen = () => {
+  handleOpen = () => {
     this.setState({ open: true });
   };
 
@@ -48,7 +48,7 @@ class MessageDialog extends Component {
   componentWillReceiveProps(nextProps) {
     if (!Commons.isEmpty(nextProps.message)
         && nextProps.message !== this.props.message)
-      this.handleClickOpen();
+      this.handleOpen();
   }
 
   render() {
@@ -58,8 +58,7 @@ class MessageDialog extends Component {
             open={this.state.open}
             onClose={this.handleClose}
             aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
+            aria-describedby="alert-dialog-description">
             <DialogTitle id="alert-dialog-title">{this.props.title}</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
@@ -68,7 +67,10 @@ class MessageDialog extends Component {
             </DialogContent>
             <DialogActions>
               {(!this.props.buttons || this.props.buttons.length === 0) && (
-                <Button onClick={this.handleClose} color="primary" autoFocus>
+                <Button
+                  autoFocus
+                  onClick={this.handleClose}
+                  color="primary">
                   OK
                 </Button>
               )}
