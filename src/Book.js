@@ -5,6 +5,13 @@ import PropTypes from 'prop-types';
 import BookMenu from './BookMenu';
 
 class Book extends Component {
+  static propTypes = {
+    book: PropTypes.object.isRequired,
+    shelfColor: PropTypes.string,
+    handleUpdateShelf: PropTypes.func.isRequired,
+    handleSetMessage: PropTypes.func.isRequired
+  };
+
   render() {
     let { title, authors } = this.props.book;
     if (authors === undefined || authors === null)
@@ -26,8 +33,8 @@ class Book extends Component {
                   backgroundImage: `url("${thumbnail}")`
                 }}
               />
-              { (thumbnail === null || thumbnail === '') &&
-                  <div className="book-cover-text-centered">No Image</div>
+              { (thumbnail === undefined || thumbnail === '') &&
+                  (<div className="book-cover-text-centered">No Image</div>)
               }
             </div>
             <BookMenu
@@ -46,12 +53,5 @@ class Book extends Component {
     );
   }
 }
-
-Book.propTypes = {
-  book: PropTypes.object.isRequired,
-  shelfColor: PropTypes.string,
-  handleUpdateShelf: PropTypes.func.isRequired,
-  handleSetMessage: PropTypes.func.isRequired
-};
 
 export default Book;

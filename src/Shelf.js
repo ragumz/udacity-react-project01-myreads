@@ -7,6 +7,12 @@ import Book from './Book';
  * TODO: doc
  */
 class Shelf extends Component {
+  static propTypes = {
+    shelf: PropTypes.object.isRequired,
+    handleUpdateShelf: PropTypes.func.isRequired,
+    handleSetMessage: PropTypes.func.isRequired
+  };
+
   render() {
     return (
       <div className="bookshelf">
@@ -28,11 +34,5 @@ class Shelf extends Component {
     );
   }
 }
-
-Shelf.propTypes = {
-  shelf: PropTypes.object.isRequired,
-  handleUpdateShelf: PropTypes.func.isRequired,
-  handleSetMessage: PropTypes.func.isRequired
-};
 
 export default Shelf;

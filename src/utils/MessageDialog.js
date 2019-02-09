@@ -11,9 +11,15 @@ import PropTypes from "prop-types";
  * TODO: doc
  */
 class MessageDialog extends Component {
+  static propTypes = {
+    title: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
+    buttons: PropTypes.array
+  };
+
   state = {
     open: true
-  }
+  };
 
   /**
    * TODO: doc
@@ -79,11 +85,5 @@ class MessageDialog extends Component {
     );
   }
 }
-
-MessageDialog.propTypes = {
-  title: PropTypes.string.isRequired,
-  message: PropTypes.string,
-  buttons: PropTypes.array
-};
 
 export default MessageDialog;

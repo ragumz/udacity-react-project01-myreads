@@ -6,11 +6,17 @@ import Book from './Book'
 import * as BooksAPI from './utils/BooksAPI'
 import SearchInput from './SearchInput'
 import MessageDialog from './utils/MessageDialog'
+import * as Constants from './utils/Constants'
 
 /**
  *
  */
 class BookSearch extends Component {
+  static propTypes = {
+    shelves: PropTypes.object.isRequired,
+    handleUpdateShelf: PropTypes.func
+  };
+
   state = {
     books: {},
     message: null,
@@ -58,8 +64,13 @@ class BookSearch extends Component {
     if (error === undefined) {
       this.setState( (currState) => {
         if (currState.changedBook !== undefined
+            && currState.changedBook !== null
             && currState.changedBook.hasOwnProperty('id')) {
-          currState.books[currState.changedBook.id]['shelf'] = currState.newShelfId;
+              const currBook = currState.books[currState.changedBook.id];
+              if (currState.newShelfId !== null && Constants.SHELF_ID_NONE !== currState.newShelfId)
+                currBook['shelf'] = currState.newShelfId;
+              else if (currBook.hasOwnProperty('shelf'))
+                delete currBook['shelf'];
         }
         currState.newShelfId = null;
         currState.changedBook = null;
@@ -68,12 +79,12 @@ class BookSearch extends Component {
     }
   };
 
-  handleUpdateShelf = (newShelfId, book, handleCallback) => {
+  handleUpdateShelf = (newShelfId, changedBook, handleCallback) => {
     this.setState( () => ({
       newShelfId,
-      changedBook: book
+      changedBook
     }));
-    this.props.handleUpdateShelf(newShelfId, book, handleCallback, this.handleOnUpdateShelfFinish);
+    this.props.handleUpdateShelf(newShelfId, changedBook, handleCallback, this.handleOnUpdateShelfFinish);
   };
 
   handleClearBooks = () => {
@@ -110,7 +121,7 @@ class BookSearch extends Component {
                 <Book
                   key={key}
                   book={book}
-                  shelfColor={book.shelf !== undefined ? this.props.shelves[book.shelf].bkgColor : undefined}
+                  shelfColor={book.shelf !== undefined && book.shelf !== null ? this.props.shelves[book.shelf].bkgColor : undefined}
                   handleUpdateShelf={this.handleUpdateShelf}
                   handleSetMessage={this.handleSetMessage}
                 />
@@ -128,11 +139,5 @@ class BookSearch extends Component {
     )
   }
 }
-
-
-BookSearch.propTypes = {
-  shelves: PropTypes.object.isRequired,
-  handleUpdateShelf: PropTypes.func
-};
 
 export default BookSearch;

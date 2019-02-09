@@ -6,6 +6,11 @@ import PropTypes from "prop-types";
  *
  */
 class SearchInput extends Component {
+  static propTypes = {
+    handleSearchBooks: PropTypes.func.isRequired,
+    handleClearBooks: PropTypes.func.isRequired
+  };
+
   state = {
     query: ''
   };
@@ -48,10 +53,5 @@ class SearchInput extends Component {
     );
   }
 }
-
-SearchInput.propTypes = {
-  handleSearchBooks: PropTypes.func.isRequired,
-  handleClearBooks: PropTypes.func.isRequired
-};
 
 export default SearchInput;

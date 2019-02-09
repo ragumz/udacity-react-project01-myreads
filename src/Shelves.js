@@ -8,6 +8,12 @@ import Shelf from './Shelf'
  *
  */
 class Shelves extends Component {
+  static propTypes = {
+    shelves: PropTypes.object.isRequired,
+    handleUpdateShelf: PropTypes.func.isRequired,
+    handleSetMessage: PropTypes.func.isRequired
+  };
+
   render() {
     return (
       <div>
@@ -28,11 +34,5 @@ class Shelves extends Component {
     );
   }
 }
-
-Shelves.propTypes = {
-  shelves: PropTypes.object.isRequired,
-  handleUpdateShelf: PropTypes.func.isRequired,
-  handleSetMessage: PropTypes.func.isRequired
-};
 
 export default Shelves;

@@ -5,14 +5,13 @@ import * as BooksAPI from './utils/BooksAPI'
 import Shelves from './Shelves'
 import BookSearch from './BookSearch'
 import MessageDialog from './utils/MessageDialog'
+import * as Constants from './utils/Constants'
 
 const INIT_SHELVES = {
               read: {id: 'read', name: 'Read', bkgColor: '#60ac5d', books: {}},
         wantToRead: {id: 'wantToRead', name: 'Want to Read', bkgColor: '#cc3300', books: {}},
   currentlyReading: {id: 'currentlyReading', name: 'Currently Reading',  bkgColor: '#cccc00', books: {}},
 };
-
-const SHELF_ID_NONE = 'none';
 
 /**
  * TODO:
@@ -86,26 +85,30 @@ class App extends Component {
       let oldShelf = null;
       let message = null;
       //remove from old shelf
-      if (oldShelfId !== undefined && SHELF_ID_NONE !== oldShelfId) {
+      if (oldShelfId !== undefined && Constants.SHELF_ID_NONE !== oldShelfId) {
         oldShelf = currState.shelves[oldShelfId];
-        book = oldShelf.books[bookId];
-        delete oldShelf.books[bookId];
+        if (oldShelf.books.hasOwnProperty(bookId)) {
+          book = oldShelf.books[bookId];
+          delete oldShelf.books[bookId];
+        }
       }
       //add to new shelf
-      if (newShelfId !== undefined && SHELF_ID_NONE !== newShelfId) {
+      if (newShelfId !== undefined && Constants.SHELF_ID_NONE !== newShelfId) {
         const newShelf = currState.shelves[newShelfId];
         newShelf.books[bookId] = book;
         book['shelf'] = newShelfId;
         message = `Succesfuly moved book ´${book.title}´ to shelf ${newShelf.name}.`;
       } else {
         //remove from old shelf
+        if (book.hasOwnProperty('shelf'))
+          delete book['shelf'];
         let shelfName = '';
         if (oldShelf !== null)
           shelfName = ` from shelf ${oldShelf.name}`;
-        delete book['shelf'];
         message = `Succesfuly removed book ´${book.title}´${shelfName}.`;
       }
       if (message !== null) {
+        //invoke callback function if it is not to set currState.message
         if (handleCallback !== this.handleSetMessage)
           handleCallback(message);
         else
@@ -152,7 +155,7 @@ class App extends Component {
           />
           { this.state.message !== null &&
             (<MessageDialog
-              title='ERROR'
+              title='INFORMATION'
               message={this.state.message}
             buttons={ [{text: 'OK', handleClick: this.handleClearMessage}] } />)
           }
