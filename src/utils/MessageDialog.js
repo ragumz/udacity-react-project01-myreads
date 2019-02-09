@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
 class MessageDialog extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
-    message: PropTypes.string.isRequired,
+    message: PropTypes.string,
     buttons: PropTypes.array
   };
 
@@ -45,6 +45,9 @@ class MessageDialog extends Component {
   };
 
   render() {
+    //if no message text is defined, no dialog is shown
+    if (this.props.message === null || this.props.message.trim().length === 0)
+      return (<div></div>);
     return (
       <div>
         <Dialog
