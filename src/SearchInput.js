@@ -17,7 +17,7 @@ class SearchInput extends Component {
 
   handleQueryState = event => {
     const query = event.target.value;
-    this.setState( () => ({
+    this.setState(() => ({
       query
     }));
     if (query.trim() === '')

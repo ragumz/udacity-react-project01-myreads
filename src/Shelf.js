@@ -19,7 +19,7 @@ class Shelf extends Component {
         <h2 className="bookshelf-title">{this.props.shelf.name}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            { Object.entries(this.props.shelf.books).map( ([key, object]) => (
+            { Object.entries(this.props.shelf.books).map(([key, object]) => (
                 <Book
                   key={key}
                   book={object}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import PropTypes from 'prop-types';
 import * as Constants from './utils/Constants';
+import * as Commons from './utils/Commons.js';
 
 class BookMenu extends Component {
   static propTypes = {
@@ -16,14 +17,14 @@ class BookMenu extends Component {
   };
 
   render() {
-    const defaultValue = this.props.book.shelf !== undefined ? this.props.book.shelf : Constants.SHELF_ID_NONE;
+    const defaultValue = !Commons.isEmpty(this.props.book.shelf) ? this.props.book.shelf : Constants.SHELF_ID_NONE;
 
     return (
       <div className="book-shelf-changer"
-        style={{backgroundColor: (this.props.shelfColor !== undefined ? this.props.shelfColor : "#848484")}}>
+        style={{backgroundColor: (!Commons.isEmpty(this.props.shelfColor) ? this.props.shelfColor : "#848484")}}>
         <select
           onChange={ (event) => (this.handleUpdateShelf(event)) }
-          defaultValue={defaultValue} >
+          defaultValue={defaultValue}>
           <option
             value="move"
             disabled>

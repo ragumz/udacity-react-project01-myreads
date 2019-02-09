@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import MessageDialog from './MessageDialog'
+import React, { Component } from 'react';
+import MessageDialog from './MessageDialog';
 
 /**
  * TODO: doc
@@ -9,18 +9,6 @@ class ErrorBoundary extends Component {
     hasError: false,
     error: null,
   };
-
-  /*logError = (error) => {
-    if (error === undefined || error === null)
-      return;
-    let msg;
-    if (typeof error === Error)
-      msg = error.stack;
-    else
-      msg = error;
-    console.error(msg);
-    return msg;
-  }*/
 
   handleEventError = (msg, url, line, col, error) => {
     this.setState({ hasError: true, error })
@@ -36,7 +24,6 @@ class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
       return <MessageDialog title="ERROR" message={this.state.error.stack} />;
     }
     return this.props.children;

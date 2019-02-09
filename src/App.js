@@ -6,12 +6,13 @@ import Shelves from './Shelves';
 import BookSearch from './BookSearch';
 import MessageDialog from './utils/MessageDialog';
 import * as Constants from './utils/Constants';
+import * as Commons from './utils/Commons.js';
 import LoadingOverlay from 'react-loading-overlay';
 
 const INIT_SHELVES = {
               read: {id: 'read', name: 'Read', bkgColor: '#60ac5d', books: {}},
-        wantToRead: {id: 'wantToRead', name: 'Want to Read', bkgColor: '#cc3300', books: {}},
-  currentlyReading: {id: 'currentlyReading', name: 'Currently Reading',  bkgColor: '#cccc00', books: {}},
+        wantToRead: {id: 'wantToRead', name: 'Want to Read', bkgColor: '#cccc00', books: {}},
+  currentlyReading: {id: 'currentlyReading', name: 'Currently Reading',  bkgColor: '#cc3300', books: {}},
 };
 
 /**
@@ -62,8 +63,8 @@ class App extends Component {
 
 
   handleUpdateShelf = (newShelfId, book, handleCallback, handleStateFinish) => {
-    if (newShelfId === undefined
-        || book === undefined
+    if (Commons.isEmpty(newShelfId)
+        || Commons.isNull(book)
         || newShelfId === book['shelf']) {
       handleCallback(`Select a different shelf for book '${book.title}'.`);
       return;
@@ -96,7 +97,7 @@ class App extends Component {
       let oldShelf = null;
       let message = null;
       //remove from old shelf
-      if (oldShelfId !== undefined && Constants.SHELF_ID_NONE !== oldShelfId) {
+      if (!Commons.isEmpty(oldShelfId) && Constants.SHELF_ID_NONE !== oldShelfId) {
         oldShelf = currState.shelves[oldShelfId];
         if (oldShelf.books.hasOwnProperty(bookId)) {
           book = oldShelf.books[bookId];
@@ -104,7 +105,7 @@ class App extends Component {
         }
       }
       //add to new shelf
-      if (newShelfId !== undefined && Constants.SHELF_ID_NONE !== newShelfId) {
+      if (!Commons.isEmpty(newShelfId) && Constants.SHELF_ID_NONE !== newShelfId) {
         const newShelf = currState.shelves[newShelfId];
         newShelf.books[bookId] = book;
         book['shelf'] = newShelfId;
@@ -114,11 +115,11 @@ class App extends Component {
         if (book.hasOwnProperty('shelf'))
           delete book['shelf'];
         let shelfName = '';
-        if (oldShelf !== null)
+        if (!Commons.isNull(oldShelf))
           shelfName = ` from shelf ${oldShelf.name}`;
         message = `Succesfuly removed book ´${book.title}´${shelfName}.`;
       }
-      if (message !== null) {
+      if (!Commons.isEmpty(message)) {
         //invoke callback function if it is not to set currState.message
         if (handleCallback !== this.handleSetMessage)
           handleCallback(message);
@@ -156,8 +157,7 @@ class App extends Component {
                   {...props}
                   shelves={this.state.shelves}
                   handleUpdateShelf={this.handleUpdateShelf}
-                  handleSetMessage={this.handleSetMessage}
-                />
+                  handleSetMessage={this.handleSetMessage}/>
               )}
             />
             <Route path="/search" render={ (props) => (
@@ -165,15 +165,13 @@ class App extends Component {
                   {...props}
                   shelves={this.state.shelves}
                   handleUpdateShelf={this.handleUpdateShelf}
-                  handleSetMessage={this.handleSetMessage}
-                />
+                  handleSetMessage={this.handleSetMessage}/>
               )}
             />
             <MessageDialog
               title='INFORMATION'
               message={this.state.message}
-              buttons={ [{text: 'OK', handleClick: this.handleClearMessage}] }
-            />
+              buttons={[{text: 'OK', handleClick: this.handleClearMessage}]}/>
           </div>
         </div>
       </LoadingOverlay>

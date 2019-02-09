@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-//import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import BookMenu from './BookMenu';
+import * as Commons from './utils/Commons.js';
 
 class Book extends Component {
   static propTypes = {
@@ -14,10 +14,10 @@ class Book extends Component {
 
   render() {
     let { title, authors } = this.props.book;
-    if (authors === undefined || authors === null)
+    if (Commons.isEmpty(authors))
       authors = ['[No author found]'];
     let thumbnail = '';
-    if (this.props.book.imageLinks !== undefined)
+    if (!Commons.isEmpty(this.props.book.imageLinks))
       thumbnail = this.props.book.imageLinks.thumbnail;
 
     return (
@@ -33,7 +33,7 @@ class Book extends Component {
                   backgroundImage: `url("${thumbnail}")`
                 }}
               />
-              { (thumbnail === undefined || thumbnail === '') &&
+              { Commons.isEmpty(thumbnail) &&
                   (<div className="book-cover-text-centered">No Image</div>)
               }
             </div>
@@ -46,7 +46,7 @@ class Book extends Component {
           </div>
           <div className="book-title">{title}</div>
           <div className="book-authors">
-            { authors.map( (author) => author ) }
+            { authors.map((author) => author ) }
           </div>
         </div>
       </li>

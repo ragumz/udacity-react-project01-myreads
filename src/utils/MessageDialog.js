@@ -6,6 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PropTypes from "prop-types";
+import * as Commons from './Commons';
 
 /**
  * TODO: doc
@@ -18,7 +19,7 @@ class MessageDialog extends Component {
   };
 
   state = {
-    open: true
+    open: false
   };
 
   /**
@@ -44,46 +45,48 @@ class MessageDialog extends Component {
     this.handleClose();
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (!Commons.isEmpty(nextProps.message)
+        && nextProps.message !== this.props.message)
+      this.handleClickOpen();
+  }
+
   render() {
-    //if no message text is defined, no dialog is shown
-    if (this.props.message === null || this.props.message.trim().length === 0)
-      return (<div></div>);
     return (
       <div>
         <Dialog
-          open={this.state.open && this.props.message !== null}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-
-        >
-          <DialogTitle id="alert-dialog-title">{this.props.title}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {this.props.message}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            {(!this.props.buttons || this.props.buttons.length === 0) && (
-              <Button onClick={this.handleClose} color="primary" autoFocus>
-                OK
-              </Button>
-            )}
-            {this.props.buttons &&
-              this.props.buttons.length > 0 &&
-              this.props.buttons.map(button => {
-                return (
-                  <Button
-                    key={button.text}
-                    onClick={this.handleCustom.bind(this, button.handleClick)}
-                    color={button.color ? button.color : "primary"}
-                  >
-                    {button.text}
-                  </Button>
-                );
-              })}
-          </DialogActions>
-        </Dialog>
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{this.props.title}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                {this.props.message}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              {(!this.props.buttons || this.props.buttons.length === 0) && (
+                <Button onClick={this.handleClose} color="primary" autoFocus>
+                  OK
+                </Button>
+              )}
+              {this.props.buttons &&
+                this.props.buttons.length > 0 &&
+                this.props.buttons.map(button => {
+                  return (
+                    <Button
+                      key={button.text}
+                      onClick={this.handleCustom.bind(this, button.handleClick)}
+                      color={button.color ? button.color : "primary"}
+                    >
+                      {button.text}
+                    </Button>
+                  );
+                })}
+            </DialogActions>
+          </Dialog>
       </div>
     );
   }

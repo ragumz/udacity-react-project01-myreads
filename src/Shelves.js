@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom'
-import Shelf from './Shelf'
+import { Link } from 'react-router-dom';
+import Shelf from './Shelf';
 
 /**
  *
