@@ -3,14 +3,29 @@ import './App.css';
 import PropTypes from 'prop-types';
 import BookMenu from './BookMenu';
 import * as Commons from './utils/Commons.js';
+import Checkbox from "@material-ui/core/Checkbox";
 
 class Book extends Component {
   static propTypes = {
     book: PropTypes.object.isRequired,
     shelfColor: PropTypes.string,
     handleUpdateShelf: PropTypes.func.isRequired,
-    handleSetMessage: PropTypes.func.isRequired
+    handleSetMessage: PropTypes.func.isRequired,
+    isMultiSelect: PropTypes.bool,
+    handleMultiSelectCheck: PropTypes.func
   };
+
+  state = {
+    selected: false
+  }
+
+  handleCheckboxChange = (event) => {
+    const selected = event.target.checked
+    this.setState({ selected }, () => {
+      if (this.props.handleMultiSelectCheck)
+        this.props.handleMultiSelectCheck(selected, this.props.book);
+    });
+  }
 
   render() {
     let { title, authors } = this.props.book;
@@ -25,6 +40,14 @@ class Book extends Component {
         <div className="book">
           <div className="book-top">
             <div className="book-cover-container">
+              { this.props.isMultiSelect &&
+                (<Checkbox style={{marginLeft: "-15px", marginTop: "-33px", top: "0", left: "0", float: "left"}}
+                  checked={this.state.selected}
+                  onChange={(event) => { this.handleCheckboxChange(event) }}
+                  value="true"
+                  color="primary"
+                />)
+              }
               <div
                 className="book-cover"
                 style={{
@@ -44,7 +67,9 @@ class Book extends Component {
               handleSetMessage={this.props.handleSetMessage}
             />
           </div>
-          <div className="book-title">{title}</div>
+          <div className="book-title">
+            {title}
+          </div>
           <div className="book-authors">
             { authors.map((author) => author ) }
           </div>

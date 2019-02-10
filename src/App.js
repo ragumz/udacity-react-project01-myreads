@@ -66,7 +66,7 @@ class App extends Component {
     if (Commons.isEmpty(newShelfId)
         || Commons.isNull(book)
         || newShelfId === book['shelf']) {
-      handleCallback(`Select a different shelf for book '${book.title}'.`);
+      handleCallback(`Select a different shelf for book '${book.title}'.`, false);
       return;
     }
     this.setState( {loading: true}, () => {
@@ -76,13 +76,13 @@ class App extends Component {
             this.handleBookUpdateCallback(data, newShelfId, book, handleCallback, handleStateFinish);
           } catch (error) {
             this.setState( {loading: false} );
-            handleCallback(`An error occurred during update: ${error.stack}`);
+            handleCallback(`An error occurred during update: ${error.stack}`, false);
             this.onLoadAllBooks();
           }
         })
         .catch((error) => {
           console.log(error.stack);
-          handleCallback(error.stack);
+          handleCallback(error.stack, false);
           handleStateFinish(error);
           this.setState( {loading: false} );
         });
@@ -90,6 +90,7 @@ class App extends Component {
   }
 
   handleBookUpdateCallback(apiData, newShelfId, book, handleCallback, handleStateFinish) {
+    //update book shelf on shelves.books state
     this.setState( (currState) => {
       currState.loading = false;
       const oldShelfId = book['shelf'];
@@ -122,7 +123,7 @@ class App extends Component {
       if (!Commons.isEmpty(message)) {
         //invoke callback function if it is not to set currState.message
         if (handleCallback !== this.handleSetMessage)
-          handleCallback(message);
+          handleCallback(message, true);
         else
           currState.message = message;
       }

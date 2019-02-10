@@ -5,9 +5,10 @@ import * as Constants from './utils/Constants';
 import * as Commons from './utils/Commons.js';
 import BookDetailsDialog from './BookDetailsDialog';
 
-const ACTION_DETAILS = 'details';
-const ACTION_RATE = 'rate';
 const ACTION_MOVE = 'move';
+const ACTION_DETAILS = 'details';
+const ACTION_PREVIEW = 'preview';
+const ACTION_INFO = 'info';
 
 class BookMenu extends Component {
   static propTypes = {
@@ -24,12 +25,18 @@ class BookMenu extends Component {
   handleOptionChange = (event) => {
     switch (event.target.value) {
       case ACTION_DETAILS:
-        //book details dialog
+        //book details sheet dialog
         this.handleShowDetails(true);
         break;
 
-      case ACTION_RATE:
-        //book rate dialog
+      case ACTION_PREVIEW:
+        //book preview
+        window.open(this.props.book.previewLink, '_blank').focus();
+        break;
+
+      case ACTION_INFO:
+        //book information
+        window.open(this.props.book.infoLink, '_blank').focus();
         break;
 
       default:
@@ -81,11 +88,15 @@ class BookMenu extends Component {
           </option>
           <option
             value={ACTION_DETAILS}>
-            Book Details
+            Book Details Sheet
           </option>
           <option
-            value={ACTION_RATE}>
-            Rate
+            value={ACTION_PREVIEW}>
+            Preview Content
+          </option>
+          <option
+            value={ACTION_INFO}>
+            Information
           </option>
         </select>
         <BookDetailsDialog show={this.state.showDetails} book={this.props.book} handleClose={this.handleShowDetails} />

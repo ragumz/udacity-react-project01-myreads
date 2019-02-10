@@ -9,13 +9,16 @@ import MessageDialog from './utils/MessageDialog';
 import * as Constants from './utils/Constants';
 import * as Commons from './utils/Commons.js';
 import LoadingOverlay from 'react-loading-overlay';
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const INIT_SEARCH = {
   books: {},
   message: null,
   loading: false,
   newShelfId: null,
-  changedBook: null
+  changedBook: null,
+  multiSelect: false
 };
 
 /**
@@ -113,6 +116,10 @@ class BookSearch extends Component {
     }))
   };
 
+  handleCheckboxChange = (event) => {
+    this.setState({ multiSelect: event.target.checked });
+  };
+
   render() {
     return(
       <LoadingOverlay
@@ -127,6 +134,18 @@ class BookSearch extends Component {
             <SearchInput
               handleSearchBooks={this.handleSearchBooks}
               handleClearBooks={this.handleClearBooks}/>
+            <FormControlLabel style={{ top: "0", right: "0", float: "right" }}
+              control={
+                <Checkbox
+                  checked={this.state.multiSelect}
+                  onChange={(event) => { this.handleCheckboxChange(event) }}
+                  value="false"
+                  color="primary">
+                  Enable Multiple Selection
+              </Checkbox>
+              }
+              label="Multi Selection"
+            />
           </div>
           <div className="search-books-results">
             <ol className="books-grid">
@@ -136,7 +155,8 @@ class BookSearch extends Component {
                     book={book}
                     shelfColor={book.hasOwnProperty('shelf') && !Commons.isEmpty(book.shelf) ? this.props.shelves[book.shelf].bkgColor : undefined}
                     handleUpdateShelf={this.handleUpdateShelf}
-                    handleSetMessage={this.handleSetMessage}/>
+                    handleSetMessage={this.handleSetMessage}
+                    isMultiSelect={this.state.multiSelect} />
                 ))
               }
             </ol>

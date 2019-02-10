@@ -10,8 +10,14 @@ class Shelf extends Component {
   static propTypes = {
     shelf: PropTypes.object.isRequired,
     handleUpdateShelf: PropTypes.func.isRequired,
-    handleSetMessage: PropTypes.func.isRequired
+    handleSetMessage: PropTypes.func.isRequired,
+    isMultiSelect: PropTypes.bool,
+    handleMultiSelectCheck: PropTypes.func
   };
+
+  state = {
+    multiSelectBooks: {}
+  }
 
   render() {
     return (
@@ -19,13 +25,15 @@ class Shelf extends Component {
         <h2 className="bookshelf-title">{this.props.shelf.name}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            { Object.entries(this.props.shelf.books).map(([key, object]) => (
+            { Object.entries(this.props.shelf.books).map(([key, book]) => (
                 <Book
                   key={key}
-                  book={object}
+                  book={book}
                   shelfColor={this.props.shelf.bkgColor}
                   handleUpdateShelf={this.props.handleUpdateShelf}
-                  handleSetMessage={this.props.handleSetMessage} />
+                  handleSetMessage={this.props.handleSetMessage}
+                  isMultiSelect={this.props.isMultiSelect}
+                  handleMultiSelectCheck={this.props.handleMultiSelectCheck} />
               ))
             }
           </ol>

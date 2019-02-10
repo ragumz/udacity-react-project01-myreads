@@ -7,6 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from '@material-ui/core/TextField';
 import PropTypes from "prop-types";
 import * as Commons from './utils/Commons.js';
+import StarRatings from 'react-star-ratings';
 
 /**
  * TODO: doc
@@ -38,21 +39,27 @@ class BookDetailsDialog extends Component {
   };
 
   isFullWidthField = (fieldName) => {
-    return 'title,subtitle,authors,description,publisher,previewLink,infoLink,canonicalVolumeLink,imageLinks'.includes(fieldName);
+    return 'title,subtitle,authors,description,industryIdentifiers,publisher,previewLink,infoLink,canonicalVolumeLink,imageLinks'.includes(fieldName);
   }
 
   doFormatValue = (fieldName) => {
     const value = this.props.book[fieldName];
-    if (Commons.isNull(value))
+    if (Commons.isEmpty(value))
       return '';
-    if (Array.isArray(value))
-      return value.toString();
     if (fieldName === 'readingModes')
       return `text=${value['text']} \n image=${value['image']}`;
     if (fieldName === 'panelizationSummary')
       return `containsEpubBubbles=${value['containsEpubBubbles']} \n containsImageBubbles=${value['containsImageBubbles']}`;
     if (fieldName === 'imageLinks')
       return `smallThumbnail=${value['smallThumbnail']} \n thumbnail=${value['thumbnail']}`;
+    if (fieldName === 'industryIdentifiers') {
+      let text = '';
+      for (let isbn of value)
+        text = text.concat(`${isbn['type']}=${isbn['identifier']}; `);
+      return text;
+    }
+    if (Array.isArray(value))
+      return value.toString();
     return value;
   }
 
@@ -71,8 +78,8 @@ class BookDetailsDialog extends Component {
         <Dialog
             open={this.state.open}
             onClose={this.handleClose}
-            fullWidth="true"
-            maxWidth="200px"
+            fullWidth={true}
+            maxWidth="lg"
             scroll="paper"
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description">
@@ -80,18 +87,33 @@ class BookDetailsDialog extends Component {
             <DialogContent>
               <div className="book-shelf-details">
                 {Object.entries(this.props.book).map(([fieldName, attr]) => (
-                  <TextField
+                  //common text fields
+                 (fieldName !== 'averageRating' &&
+                  (<TextField
                     id="standard-name"
                     key={fieldName}
-                    label={fieldName}
+                    label={Commons.separateFromUpperChar(Commons.capitalize(fieldName))}
                     value={this.doFormatValue(fieldName)}
                     multiline={'description,imageLinks,readingModes'.includes(fieldName)}
                     margin="normal"
                     fullWidth={this.isFullWidthField(fieldName)}
-                    disabled="true"
+                    disabled={false}
+                    readOnly={true}
                     variant="outlined"
-                    style={{margin: "5px"}}
-                  />
+                    style={{margin: "5px"}}/>
+                  ))
+                  ||
+                  //ratings field
+                  (fieldName === 'averageRating' &&
+                  (<StarRatings
+                    key={fieldName}
+                    rating={attr}
+                    starRatedColor="blue"
+                    numberOfStars={5}
+                    name={fieldName}
+                    isSelectable={false}
+                    isAggregateRating={true}/>
+                  ))
                 ))}
               </div>
             </DialogContent>
