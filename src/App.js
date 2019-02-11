@@ -10,9 +10,9 @@ import * as Commons from './utils/Commons.js';
 import LoadingOverlay from 'react-loading-overlay';
 
 const INIT_SHELVES = {
-              read: {id: Constants.SHELF_ID_READ, name: 'Read', bkgColor: '#60ac5d', books: {}},
-        wantToRead: {id: Constants.SHELF_ID_WANTREAD, name: 'Want to Read', bkgColor: '#cccc00', books: {}},
-  currentlyReading: {id: Constants.SHELF_ID_CURRREAD, name: 'Currently Reading',  bkgColor: '#cc3300', books: {}},
+              read: {id: Constants.SHELF_ID_READ, name: 'Read', bkgColor: '#60ac5d', books: new Map()},
+        wantToRead: {id: Constants.SHELF_ID_WANTREAD, name: 'Want to Read', bkgColor: '#cccc00', books: new Map()},
+  currentlyReading: {id: Constants.SHELF_ID_CURRREAD, name: 'Currently Reading',  bkgColor: '#cc3300', books: new Map()},
 };
 
 /**
@@ -49,13 +49,20 @@ class App extends Component {
       this.setState( (currState) => {
         currState.loading = false;
         let currShelf = currState['shelves'][shelfId];
-        //convert the API books array into a books' dictionary to each shelf
-        currShelf['books'] = books.filter( (book) => {
+        books.filter((book) => {
+          if (book.shelf === shelfId) {
+            currShelf.books.set(book.id, book);
+            return true;
+          }
+          return false;
+        });
+        //convert the API books array into a books' Map to each shelf
+        /*currShelf['books'] = books.filter( (book) => {
           return book.shelf === shelfId;
         }).reduce( (map, obj) => {
           map[obj['id']] = obj;
           return map;
-        }, {});
+        }, {});*/
         return currState;
       })
     }
@@ -100,15 +107,15 @@ class App extends Component {
       //remove from old shelf
       if (!Commons.isEmpty(oldShelfId) && Constants.SHELF_ID_NONE !== oldShelfId) {
         oldShelf = currState.shelves[oldShelfId];
-        if (oldShelf.books.hasOwnProperty(bookId)) {
-          book = oldShelf.books[bookId];
-          delete oldShelf.books[bookId];
+        if (oldShelf.books.has(bookId)) {
+          book = oldShelf.books.get(bookId);
+          oldShelf.books.delete(bookId);
         }
       }
       //add to new shelf
       if (!Commons.isEmpty(newShelfId) && Constants.SHELF_ID_NONE !== newShelfId) {
         const newShelf = currState.shelves[newShelfId];
-        newShelf.books[bookId] = book;
+        newShelf.books.set(bookId, book);
         book['shelf'] = newShelfId;
         message = `Succesfuly moved book ´${book.title}´ to shelf ${newShelf.name}.`;
       } else {

@@ -15,7 +15,7 @@ class BookMenu extends Component {
     book: PropTypes.object.isRequired,
     shelfColor: PropTypes.string,
     handleUpdateShelf: PropTypes.func.isRequired,
-    handleSetMessage: PropTypes.func.isRequired
+    handleSetMessage: PropTypes.func.isRequired,
   };
 
   state = {

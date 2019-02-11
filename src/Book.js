@@ -12,7 +12,7 @@ class Book extends Component {
     handleUpdateShelf: PropTypes.func.isRequired,
     handleSetMessage: PropTypes.func.isRequired,
     isMultiSelect: PropTypes.bool,
-    handleMultiSelectCheck: PropTypes.func
+    handleMultiSelectCheck: PropTypes.func,
   };
 
   state = {
@@ -25,6 +25,18 @@ class Book extends Component {
       if (this.props.handleMultiSelectCheck)
         this.props.handleMultiSelectCheck(selected, this.props.book);
     });
+  }
+
+  handleClearSelection = () => {
+    this.setState({ selected: false });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    //deselect book from multi selection change
+    if (nextProps.isMultiSelect === false
+        && this.props.isMultiSelect === true
+        && this.state.selected === true)
+      this.setState({selected: false});
   }
 
   render() {
