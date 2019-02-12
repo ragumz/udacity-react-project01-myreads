@@ -32,7 +32,11 @@ class App extends Component {
     this.setState( {loading: true}, () => {
       BooksAPI.getAll()
         .then( (books) => {
-          this.handleLoadShelves(books);
+          try {
+            this.handleLoadShelves(books);
+          } finally {
+            this.setState({loading: false});
+          }
         })
         .catch((error) => {
           console.log(error.stack);
@@ -47,7 +51,6 @@ class App extends Component {
   handleLoadShelves(books) {
     for (const shelfId in this.state.shelves) {
       this.setState( (currState) => {
-        currState.loading = false;
         let currShelf = currState['shelves'][shelfId];
         books.filter((book) => {
           if (book.shelf === shelfId) {

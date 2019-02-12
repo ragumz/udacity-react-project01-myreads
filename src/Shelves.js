@@ -40,13 +40,15 @@ class Shelves extends Component {
   };
 
   handleMultiSelectBookCheck = (isSelected, book) => {
-    this.setState( (currState) => {
-      if (isSelected === true)
-        currState.selectionBooks.add(book);
-      else if (currState.selectionBookIds.has(book))
-        currState.selectionBookIds.delete(book);
-      return currState;
-    })
+    if (!Commons.isNull(isSelected)
+      && !Commons.isNull(book))
+      this.setState( (currState) => {
+        if (isSelected === true)
+          currState.selectionBooks.add(book);
+        else if (currState.selectionBooks.has(book))
+          currState.selectionBooks.delete(book);
+        return currState;
+      });
   };
 
   handleUpdateShelf = (newShelfId, changedBook, handleCallback, handleOnUpdateShelfFinish) => {

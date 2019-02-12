@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import BookMenu from './BookMenu';
 import * as Commons from './utils/Commons.js';
 import Checkbox from "@material-ui/core/Checkbox";
+import StarRatings from 'react-star-ratings';
 
 class Book extends Component {
   static propTypes = {
@@ -85,6 +86,22 @@ class Book extends Component {
           <div className="book-authors">
             { authors.map((author) => author ) }
           </div>
+          {!Commons.isNull(this.props.book.averageRating) &&
+            (<div>
+              <StarRatings
+                rating={this.props.book.averageRating}
+                starRatedColor="blue"
+                numberOfStars={5}
+                name="averageRating"
+                isSelectable={false}
+                isAggregateRating={true}
+                starDimension="20px"
+                starSpacing="1px" />
+              <div className="book-authors">
+                of {this.props.book.ratingsCount} rating(s)
+              </div>
+            </div>)
+          }
         </div>
       </li>
     );

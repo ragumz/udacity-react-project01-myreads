@@ -76,15 +76,6 @@ class BookSearch extends Component {
             book['shelf'] = shelf.id;
         });
       });
-      /*books = resultBooks.reduce((map, book) => {
-        //identify current shelf
-        Object.entries(this.props.shelves).forEach(([skey, shelf]) => {
-          if (shelf.books.has(book['id']))
-            book['shelf'] = shelf.id;
-        });
-        map[book['id']] = book;
-        return map;
-      }, {});*/
     } else {
       books = new Map();
       message = `No book found with title or author using query '${query}'`;
@@ -245,13 +236,15 @@ class BookSearch extends Component {
   };
 
   handleMultiSelectBookCheck = (isSelected, book) => {
-    this.setState( (currState) => {
-      if (isSelected === true)
-        currState.selectionBookIds.add(book.id);
-      else if (currState.selectionBookIds.has(book.id))
-        currState.selectionBookIds.delete(book.id);
-      return currState;
-    })
+    if (!Commons.isNull(isSelected)
+      && !Commons.isNull(book))
+      this.setState( (currState) => {
+        if (isSelected === true)
+          currState.selectionBookIds.add(book.id);
+        else if (currState.selectionBookIds.has(book.id))
+          currState.selectionBookIds.delete(book.id);
+        return currState;
+      });
   };
 
   render() {
