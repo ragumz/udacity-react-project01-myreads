@@ -9,35 +9,41 @@ import PropTypes from "prop-types";
 import * as Commons from './Commons';
 
 /**
- * TODO: doc
+ * @description An utility class to display modal dialogs with messages and buttons.
  */
 class MessageDialog extends Component {
+  /**
+   * @description Define props' arguments' types
+   */
   static propTypes = {
     title: PropTypes.string.isRequired,
     message: PropTypes.string,
     buttons: PropTypes.array
   };
 
+  /**
+   * @description Initializes component states
+   */
   state = {
     open: false
   };
 
   /**
-   * TODO: doc
+   * @description Set the dialog to show
    */
   handleOpen = () => {
     this.setState({ open: true });
   };
 
   /**
-   * TODO: doc
+   *  @description Set the dialog to hide
    */
   handleClose = () => {
     this.setState({ open: false });
   };
 
   /**
-   * TODO: doc
+   * @description Callback function to handle custom buttons' clicks.
    */
   handleCustom = (handleClick) => {
     if (handleClick)
@@ -45,11 +51,16 @@ class MessageDialog extends Component {
     this.handleClose();
   };
 
+  /**
+   * @description React callback invoked when new props are to be received
+   */
   componentWillReceiveProps(nextProps) {
+    //shows the dialog if there is any message text.
     if (!Commons.isEmpty(nextProps.message)
-        && nextProps.message !== this.props.message)
+        && nextProps.message !== this.props.message) {
       this.handleOpen();
-  }
+    }
+  };
 
   render() {
     return (
@@ -66,7 +77,8 @@ class MessageDialog extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              {(!this.props.buttons || this.props.buttons.length === 0) && (
+              {//if no custom array buttons are received, show the default OK one
+                (!this.props.buttons || this.props.buttons.length === 0) && (
                 <Button
                   autoFocus
                   onClick={this.handleClose}
@@ -74,7 +86,8 @@ class MessageDialog extends Component {
                   OK
                 </Button>
               )}
-              {this.props.buttons &&
+              {//if custom array buttons are received, mount all of them
+                this.props.buttons &&
                 this.props.buttons.length > 0 &&
                 this.props.buttons.map(button => {
                   return (
