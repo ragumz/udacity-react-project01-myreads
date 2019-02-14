@@ -122,7 +122,7 @@ class BookDetailsDialog extends Component {
             scroll="paper"
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description">
-            <DialogTitle id="alert-dialog-title">Book Details</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Book Data Sheet</DialogTitle>
             <DialogContent>
               <div className="book-shelf-details">
                 {Object.entries(this.props.book).map(([fieldName, attr]) => (

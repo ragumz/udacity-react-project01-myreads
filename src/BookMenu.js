@@ -6,6 +6,7 @@ import * as Commons from './utils/Commons.js';
 import BookDetailsDialog from './BookDetailsDialog';
 
 const ACTION_MOVE = 'move';
+const ACTION_DATA = 'data';
 const ACTION_DETAILS = 'details';
 const ACTION_PREVIEW = 'preview';
 const ACTION_INFO = 'info';
@@ -22,6 +23,7 @@ class BookMenu extends Component {
     shelfColor: PropTypes.string,
     handleUpdateShelf: PropTypes.func.isRequired,
     handleSetMessage: PropTypes.func.isRequired,
+    isMultiSelect: PropTypes.bool
   };
 
   /**
@@ -61,6 +63,7 @@ class BookMenu extends Component {
         //book's shelf update parent function to move them between shelves
         this.props.handleUpdateShelf(value, this.props.book, this.props.handleSetMessage);
     }
+    event.target.value = ACTION_MOVE;
   };
 
   /**
@@ -79,22 +82,26 @@ class BookMenu extends Component {
    * @description Creates the component UI
    */
   render() {
-    //identify the correct shelf name to change its color
-    const defaultValue = !Commons.isEmpty(this.props.book.shelf) ? this.props.book.shelf : Constants.SHELF_ID_NONE;
+    //declare CSS class names
     const boldOption = "book-shelf-changer-bold";
     const normalOption = "book-shelf-changer-normal";
 
     return (
       <div
         className="book-shelf-changer"
-        style={{backgroundColor: (!Commons.isEmpty(this.props.shelfColor) ? this.props.shelfColor : "#848484")}}>
+        style={{backgroundColor: (!Commons.isEmpty(this.props.shelfColor) ? this.props.shelfColor : Constants.SHELF_COLOR_NONE)}}>
         <select
           onChange={ (event) => (this.handleOptionChange(event)) }
-          defaultValue={defaultValue}>
+          defaultValue={ACTION_MOVE}>
           <option
+            className="book-shelf-changer-italic"
             value={ACTION_MOVE}
             disabled>
-            Move to Shelf...
+            { (!this.props.isMultiSelect
+                && ('Move this Book to Shelf...'))
+              ||(this.props.isMultiSelect
+                && ('Move Multiple Books to Shelf...'))
+              }
           </option>
           <option
             className={this.props.book.shelf === Constants.SHELF_ID_CURRREAD ? boldOption : normalOption}
@@ -122,18 +129,25 @@ class BookMenu extends Component {
             —————————
           </option>
           <option
-            value={ACTION_DETAILS}>
-            Book Details Sheet
+            className="book-shelf-changer-italic"
+            value={ACTION_DATA}
+            disabled>
+            More Book details
           </option>
           <option
-            value={ACTION_PREVIEW}
-            disabled={Commons.isEmpty(this.props.book.previewLink)}>
-            Preview Content
+            value={ACTION_DETAILS}
+            disabled={this.props.isMultiSelect}>
+            Data Sheet
           </option>
           <option
             value={ACTION_INFO}
-            disabled={Commons.isEmpty(this.props.book.infoLink)}>
-            Information
+            disabled={this.props.isMultiSelect || Commons.isEmpty(this.props.book.infoLink)}>
+            Summary
+          </option>
+          <option
+            value={ACTION_PREVIEW}
+            disabled={this.props.isMultiSelect || Commons.isEmpty(this.props.book.previewLink)}>
+            Preview Content
           </option>
         </select>
         { /* Component to show a modal dialog window with all Book object field values */ }

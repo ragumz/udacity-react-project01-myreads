@@ -199,6 +199,9 @@ button:active {
 .book-shelf-changer-normal {
   font-weight: normal;
 }
+.book-shelf-changer-italic {
+  font-style: italic;
+}
 
 .book-shelf-details {
   display: 'flex';

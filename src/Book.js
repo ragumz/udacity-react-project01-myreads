@@ -115,6 +115,7 @@ class Book extends Component {
               shelfColor={this.props.shelfColor}
               handleUpdateShelf={this.props.handleUpdateShelf}
               handleSetMessage={this.props.handleSetMessage}
+              isMultiSelect={this.props.isMultiSelect}
             />
           </div>
           <div className="book-title">
