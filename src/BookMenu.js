@@ -31,7 +31,7 @@ class BookMenu extends Component {
     /**
      * @description Flag to show or hide BookDetailsDialog component
      */
-    showDetails: false
+    showDetails: false,
   };
 
   /**
@@ -40,7 +40,8 @@ class BookMenu extends Component {
    * @param {object} event The event object of the DOM UI component
    */
   handleOptionChange = (event) => {
-    switch (event.target.value) {
+    const value = event.target.value;
+    switch (value) {
       case ACTION_DETAILS:
         //book details sheet dialog
         this.handleShowDetails(true);
@@ -58,7 +59,7 @@ class BookMenu extends Component {
 
       default:
         //book's shelf update parent function to move them between shelves
-        this.props.handleUpdateShelf(event.target.value, this.props.book, this.props.handleSetMessage);
+        this.props.handleUpdateShelf(value, this.props.book, this.props.handleSetMessage);
     }
   };
 
@@ -80,9 +81,12 @@ class BookMenu extends Component {
   render() {
     //identify the correct shelf name to change its color
     const defaultValue = !Commons.isEmpty(this.props.book.shelf) ? this.props.book.shelf : Constants.SHELF_ID_NONE;
+    const boldOption = "book-shelf-changer-bold";
+    const normalOption = "book-shelf-changer-normal";
 
     return (
-      <div className="book-shelf-changer"
+      <div
+        className="book-shelf-changer"
         style={{backgroundColor: (!Commons.isEmpty(this.props.shelfColor) ? this.props.shelfColor : "#848484")}}>
         <select
           onChange={ (event) => (this.handleOptionChange(event)) }
@@ -90,21 +94,25 @@ class BookMenu extends Component {
           <option
             value={ACTION_MOVE}
             disabled>
-            Move to...
+            Move to Shelf...
           </option>
           <option
+            className={this.props.book.shelf === Constants.SHELF_ID_CURRREAD ? boldOption : normalOption}
             value={Constants.SHELF_ID_CURRREAD}>
             Currently Reading
           </option>
           <option
+            className={this.props.book.shelf === Constants.SHELF_ID_WANTREAD ? boldOption : normalOption}
             value={Constants.SHELF_ID_WANTREAD}>
             Want to Read
           </option>
           <option
+            className={this.props.book.shelf === Constants.SHELF_ID_READ ? boldOption : normalOption}
             value={Constants.SHELF_ID_READ}>
             Read
           </option>
           <option
+            className={!this.props.book.hasOwnProperty('shelf') || this.props.book.shelf === Constants.SHELF_ID_NONE ? boldOption : normalOption}
             value={Constants.SHELF_ID_NONE}>
             None
           </option>

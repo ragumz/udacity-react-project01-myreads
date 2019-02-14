@@ -193,6 +193,13 @@ button:active {
   cursor: pointer;
 }
 
+.book-shelf-changer-bold {
+  font-weight: bold;
+}
+.book-shelf-changer-normal {
+  font-weight: normal;
+}
+
 .book-shelf-details {
   display: 'flex';
   flexWrap: 'wrap';

@@ -232,7 +232,7 @@ class BookSearch extends Component {
         } catch (error) {
           console.log(`An error occurred while updating book ${localBook.title}: \n${error.stack}`);
           //keep and error message in case of erros
-          messages = messages.concat(`Error ${error.message} occurred on processing book ${localBook.title}.\n`);
+          messages = messages.concat(`Error ${error.message} occurred on processing book ${localBook.title}. \n`);
         }
       });
       if (!Commons.isEmpty(messages)) {
@@ -294,11 +294,11 @@ class BookSearch extends Component {
             this.state.selectedCallback(`All ${this.state.selectionResult.successCount} selected books were succesfully ${destination}`);
           } else {
             //parcial successful because a book already were at the shelf or an error caused its failure
-            this.state.selectedCallback(`Only ${this.state.selectionResult.successCount} of ${this.state.selectionResult.totalCount} selected books were succesfully ${destination} \n${this.state.selectionResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
+            this.state.selectedCallback(`Only ${this.state.selectionResult.successCount} of ${this.state.selectionResult.totalCount} selected books were succesfully ${destination} ${this.state.selectionResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
           }
         } else {
           //Partial success of complete failure because a book already were at the shelf or an error caused its failure
-          this.state.selectedCallback(`None of ${this.state.selectionResult.totalCount} selected books were ${destination} \n${this.state.selectionResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
+          this.state.selectedCallback(`None of ${this.state.selectionResult.totalCount} selected books were ${destination} ${this.state.selectionResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
         }
       }
       //reset multi select state variables
