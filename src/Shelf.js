@@ -4,9 +4,12 @@ import PropTypes from 'prop-types';
 import Book from './Book';
 
 /**
- * TODO: doc
+ * @description React component to books on one shelf
  */
 class Shelf extends Component {
+  /**
+   * @description Define props' arguments' types
+   */
   static propTypes = {
     shelf: PropTypes.object.isRequired,
     handleUpdateShelf: PropTypes.func.isRequired,
@@ -15,18 +18,18 @@ class Shelf extends Component {
     handleMultiSelectCheck: PropTypes.func
   };
 
-  state = {
-    multiSelectBooks: {}
-  }
-
+  /**
+   * @description Creates the component UI
+   */
   render() {
     return (
       <div className="bookshelf">
+        {/* Shelf title with a line separtor */}
         <h2 className="bookshelf-title">{this.props.shelf.name}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            { Array.from(this.props.shelf.books.values()).map((book) => (
-              //Object.entries(this.props.shelf.books).map(([key, book]) => (
+            { /* Loop over all books on the shelf and create a book component */
+              Array.from(this.props.shelf.books.values()).map((book) => (
                 <Book
                   key={book.id}
                   book={book}

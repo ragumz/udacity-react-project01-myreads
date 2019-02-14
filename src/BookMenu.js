@@ -10,7 +10,13 @@ const ACTION_DETAILS = 'details';
 const ACTION_PREVIEW = 'preview';
 const ACTION_INFO = 'info';
 
+/**
+ * @description React component to give each book a menu of actions
+ */
 class BookMenu extends Component {
+  /**
+   * @description Define props' arguments' types
+   */
   static propTypes = {
     book: PropTypes.object.isRequired,
     shelfColor: PropTypes.string,
@@ -18,10 +24,21 @@ class BookMenu extends Component {
     handleSetMessage: PropTypes.func.isRequired,
   };
 
+  /**
+   * @description Initializes component states
+   */
   state = {
+    /**
+     * @description Flag to show or hide BookDetailsDialog component
+     */
     showDetails: false
-  }
+  };
 
+  /**
+   * @description Handle the select option change event to invoke parent controls to each chosen action
+   *
+   * @param {object} event The event object of the DOM UI component
+   */
   handleOptionChange = (event) => {
     switch (event.target.value) {
       case ACTION_DETAILS:
@@ -30,28 +47,38 @@ class BookMenu extends Component {
         break;
 
       case ACTION_PREVIEW:
-        //book preview
+        //book preview link opened on another browser tab
         window.open(this.props.book.previewLink, '_blank').focus();
         break;
 
       case ACTION_INFO:
-        //book information
+        //book information link opened on another browser tab
         window.open(this.props.book.infoLink, '_blank').focus();
         break;
 
       default:
-        //Shelf update parent functions
+        //book's shelf update parent function to move them between shelves
         this.props.handleUpdateShelf(event.target.value, this.props.book, this.props.handleSetMessage);
     }
   };
 
+  /**
+   * @description Handle state flag to show BookDetailsDialog
+   *
+   * @param {bool} showDetails The flag value to show or hide the book details component dialog
+   */
   handleShowDetails = (showDetails) => {
-    if (Commons.isNull(showDetails))
+    if (Commons.isNull(showDetails)) {
       showDetails = false;
+    }
     this.setState({showDetails});
-  }
+  };
 
+  /**
+   * @description Creates the component UI
+   */
   render() {
+    //identify the correct shelf name to change its color
     const defaultValue = !Commons.isEmpty(this.props.book.shelf) ? this.props.book.shelf : Constants.SHELF_ID_NONE;
 
     return (
@@ -91,15 +118,21 @@ class BookMenu extends Component {
             Book Details Sheet
           </option>
           <option
-            value={ACTION_PREVIEW}>
+            value={ACTION_PREVIEW}
+            disabled={Commons.isEmpty(this.props.book.previewLink)}>
             Preview Content
           </option>
           <option
-            value={ACTION_INFO}>
+            value={ACTION_INFO}
+            disabled={Commons.isEmpty(this.props.book.infoLink)}>
             Information
           </option>
         </select>
-        <BookDetailsDialog show={this.state.showDetails} book={this.props.book} handleClose={this.handleShowDetails} />
+        { /* Component to show a modal dialog window with all Book object field values */ }
+        <BookDetailsDialog
+          show={this.state.showDetails}
+          book={this.props.book}
+          handleClose={this.handleShowDetails} />
       </div>
     );
   }

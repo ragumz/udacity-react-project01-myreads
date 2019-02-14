@@ -10,38 +10,65 @@ import * as Commons from './utils/Commons.js';
 import StarRatings from 'react-star-ratings';
 
 /**
- * TODO: doc
+ * @description A text Comma Separated Values field names which input must fill dialog width
+ */
+const FULL_WIDTH_FIELD_NAMES_CSV = 'title,subtitle,authors,description,industryIdentifiers,publisher,previewLink,infoLink,canonicalVolumeLink,imageLinks';
+
+/**
+ * @description React component to show all Book object fields' values in a modal dialog
  */
 class BookDetailsDialog extends Component {
+  /**
+   * @description Define props' arguments' types
+   */
   static propTypes = {
     handleClose: PropTypes.func.isRequired,
     book: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired
   };
 
+  /**
+   * @description Initializes component states
+   */
   state = {
+    /**
+     * @description Flag to show or hide the modal dialog window
+     */
     open: false
   };
 
   /**
-   * TODO: doc
+   * @description Show the modal dialog window
    */
   handleOpen = () => {
     this.setState({ open: true });
   };
 
   /**
-   * TODO: doc
+   * @description Hide the modal dialog window
    */
   handleClose = () => {
-    this.setState({ open: false },
-        this.props.handleClose());
+    //close the dialog and invokes parent callback function
+    this.setState({ open: false }, this.props.handleClose());
   };
 
-  isFullWidthField = (fieldName) => {
-    return 'title,subtitle,authors,description,industryIdentifiers,publisher,previewLink,infoLink,canonicalVolumeLink,imageLinks'.includes(fieldName);
-  }
 
+  /**
+   * @description Check if the field name represents an input that fills all the dialog width
+   *
+   * @param {string} fieldName Name of the current processed Book object field
+   * @return true if the DOM input must fill all the dialog width
+   */
+  isFullWidthField = (fieldName) => {
+    return FULL_WIDTH_FIELD_NAMES_CSV.includes(fieldName);
+  };
+
+  /**
+   * @description Get the proper text representation of the Book field value
+   *
+   * @param {string} fieldName Name of the current processed Book object field
+   * @return A text representation of the field value
+   */
   doFormatValue = (fieldName) => {
     const value = this.props.book[fieldName];
     if (Commons.isEmpty(value))
@@ -61,17 +88,29 @@ class BookDetailsDialog extends Component {
     if (Array.isArray(value))
       return value.toString();
     return value;
-  }
+  };
 
+  /**
+   * @description React callback invoked when new props are to be received
+   *
+   * @param {object} nextProps The new props that will replace this.props
+   */
   componentWillReceiveProps(nextProps) {
+    //when the received prop is different from the current show flag
     if (nextProps.show !== this.props.show) {
-      if (nextProps.show)
+      if (nextProps.show) {
+        //show the Book details dialog
         this.handleOpen();
-      else
+      } else {
+        //hide the Book details dialog
         this.handleClose();
+      }
     }
   }
 
+  /**
+   * @description Creates the component UI
+   */
   render() {
     return (
       <div>
@@ -90,7 +129,7 @@ class BookDetailsDialog extends Component {
                   //common text fields
                  (fieldName !== 'averageRating' &&
                   (<TextField
-                    id="standard-name"
+                    id={fieldName}
                     key={fieldName}
                     label={Commons.separateFromUpperChar(Commons.capitalize(fieldName))}
                     value={this.doFormatValue(fieldName)}

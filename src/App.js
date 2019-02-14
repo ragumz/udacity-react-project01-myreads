@@ -13,10 +13,23 @@ import LoadingOverlay from 'react-loading-overlay';
  * @description Constant to represent main application state data initialization
  */
 const INIT_SHELVES = {
-  read: {id: Constants.SHELF_ID_READ, name: 'Read', bkgColor: '#60ac5d', books: new Map()},
-  wantToRead: {id: Constants.SHELF_ID_WANTREAD, name: 'Want to Read', bkgColor: '#cccc00', books: new Map()},
-  currentlyReading: {id: Constants.SHELF_ID_CURRREAD, name: 'Currently Reading',  bkgColor: '#cc3300', books: new Map()},
+  read: {
+    id: Constants.SHELF_ID_READ,
+    name: 'Read',
+    bkgColor: '#60ac5d',
+    books: new Map()},
+  wantToRead: {
+    id: Constants.SHELF_ID_WANTREAD,
+    name: 'Want to Read',
+    bkgColor: '#cccc00',
+    books: new Map()},
+  currentlyReading: {
+    id: Constants.SHELF_ID_CURRREAD,
+    name: 'Currently Reading',
+    bkgColor: '#cc3300',
+    books: new Map()},
 };
+
 
 /**
  * @description Main application component class declarations
@@ -26,11 +39,17 @@ class App extends Component {
    * @description Initializes component states
    */
   state = {
-    /** All the shelves data representation */
+    /**
+     * @description All the shelves data representation
+     */
     shelves: INIT_SHELVES,
-    /** Text messages to be shown to the user in modal dialog */
+    /**
+      * @description Text messages to be shown to the user in modal dialog
+      */
     message: null,
-    /** Flag to identify the need to show a loading overlay cursor */
+    /**
+     * @description Flag to identify the need to show a loading overlay cursor
+     */
     loading: true
   };
 
@@ -52,7 +71,7 @@ class App extends Component {
           }
         })
         .catch((error) => {
-          //whe REST error, log it and present it to the user
+          //when REST error, log it and present it to the user
           console.log(error.stack);
           this.setState(() => ({
             message: error.stack,
@@ -99,7 +118,8 @@ class App extends Component {
     //do not start if the shelf is the same of the book or if its id is not defined
     if (Commons.isEmpty(newShelfId)
         || Commons.isNull(book)
-        || newShelfId === book['shelf']) {
+        || (newShelfId === book['shelf']
+          || (newShelfId === Constants.SHELF_ID_NONE && !book.hasOwnProperty('shelf'))) ) {
       //send a message to the caller with fail flag
       handleCallback(`Select a different shelf for book '${book.title}'.`, null);
       return;
@@ -132,6 +152,7 @@ class App extends Component {
   /**
    * @description Processes each REST successful data and updates the current book exchanging it between
    *  selected shelves
+   *
    * @param {object} apiData Result returned from REST web service
    * @param {string} newShelfId New shelf unique identifier
    * @param {object} book Current selected book to change shelf
@@ -148,30 +169,32 @@ class App extends Component {
       const bookId = book['id'];
       let oldShelf = null;
       let message = null;
+      let localBook = book;
       //remove book from old shelf if it exists and is not the 'none' shelf
       if (!Commons.isEmpty(oldShelfId) && Constants.SHELF_ID_NONE !== oldShelfId) {
         //get previous shelf object
         oldShelf = currState.shelves[oldShelfId];
         if (oldShelf.books.has(bookId)) {
           //refresh the book object pointer to be updated
-          book = oldShelf.books.get(bookId);
+          localBook = oldShelf.books.get(bookId);
           //if shelf contains the book, delete it
           oldShelf.books.delete(bookId);
         }
       }
       //add book to the new shelf if it exists and is not the 'none' shelf
       if (!Commons.isEmpty(newShelfId) && Constants.SHELF_ID_NONE !== newShelfId) {
+        //update the book object shelf id
+        localBook['shelf'] = newShelfId;
         //get the new shelf object
         const newShelf = currState.shelves[newShelfId];
         //add the book indexed by its id
-        newShelf.books.set(bookId, book);
-        //update the book object shelf id
-        book['shelf'] = newShelfId;
-        message = `Succesfuly moved book ´${book.title}´ to shelf ${newShelf.name}.`;
+        newShelf.books.set(bookId, localBook);
+        message = `Succesfuly moved book ´${localBook.title}´ to shelf ${newShelf.name}.`;
       } else {
+
         //remove the book from the old shelf if it is the 'none' shelf
-        if (book.hasOwnProperty('shelf')) {
-          delete book['shelf'];
+        if (localBook.hasOwnProperty('shelf')) {
+          delete localBook['shelf'];
         }
         //initializes shelf data message variable
         let shelfMessage = '';
@@ -190,7 +213,14 @@ class App extends Component {
       }
       //return the current updated shelves state
       return currState;
-    }, handleStateFinish);  //executes the callback function to signals that the book update process has ended
+    },
+      //executes the callback function to signals that the book update process has ended
+      () => {
+        if (!Commons.isNull(handleStateFinish)) {
+          handleStateFinish(null, newShelfId, book);
+        }
+      }
+    );
   }
 
   /**
@@ -202,6 +232,8 @@ class App extends Component {
 
   /**
    * @description Sets a new text message to the modal dialog.
+   *
+   * @param {string} message A text to be shown to the user
    */
   handleSetMessage = (message) => {
     this.setState(() => ({
@@ -216,8 +248,11 @@ class App extends Component {
    */
   componentDidMount() {
     this.onLoadAllBooks();
-  };
+  }
 
+  /**
+   * @description Creates the component UI
+   */
   render() {
     return (
       //loading overlay cursor componente shown by loading state flag

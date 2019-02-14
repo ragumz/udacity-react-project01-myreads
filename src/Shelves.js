@@ -26,15 +26,30 @@ class Shelves extends Component {
    * @description Initializes component states
    */
   state = {
+    /**
+     * @description Flag to show or hide Book component checkbox for multiple selection for batch update
+     */
     multiSelect: false,
+    /**
+     * @description A collection of all selected books for batch update
+     */
     selectionBooks: new Set(),
+    /**
+     * @description Objet to group book batch update processing counts
+     */
     selectionResult: {
       successCount: 0,
       stayedCount: 0,
       errorCount: 0,
       totalCount: 0,
     },
+    /**
+     * @description A text with the new selected Shelf identification for book batch update
+     */
     selectedShelfId: null,
+    /**
+     * @description A callback function from the child to present messages to user
+     */
     selectedCallback: null
   };
 
@@ -131,7 +146,8 @@ class Shelves extends Component {
           //update their shelves on the parent function
           this.props.handleUpdateShelf(newShelfId, book, this.handleMultiSelectCallback);
         } catch (error) {
-          //in case of unknown error, keep a message to show
+          console.log(`An error occurred while updating book ${book.title}: \n${error.stack}`);
+          //keep and error message in case of erros
           messages = messages.concat(`Error ${error.message} occurred on processing book ${book.title}.\n`);
         }
       });
@@ -139,8 +155,6 @@ class Shelves extends Component {
         //send a message to the child component in case of errors
         handleCallback(messages);
       }
-      //executes the last function callback to calculate the update books and present a message to the user
-//      this.handleOnUpdateMultiSelectFinish();
     });
   };
 
@@ -181,22 +195,26 @@ class Shelves extends Component {
         //select the proper message regarding the shelf exchange
         if (!Commons.isEmpty(this.state.selectedShelfId)
               && this.state.selectedShelfId !== Constants.SHELF_ID_NONE) {
-          destination = `moved to shelf ${this.props.shelves[this.state.selectedShelfId].name}`;
+          destination = `moved to shelf ${this.props.shelves[this.state.selectedShelfId].name}.`;
         } else {
-          destination = 'removed from their shelves'
+          destination = 'removed from their shelves.';
+        }
+        let errorMessages = '';
+        if (this.state.selectionResult.errorCount > 0) {
+           errorMessages = `${this.state.selectionResult.errorCount} error(s) occurred.`;
         }
         //if there are any successful book updates
         if (this.state.selectionResult.successCount > 0) {
           if (this.state.selectionResult.successCount === this.state.selectionResult.totalCount) {
             //totally successful and all books updated
-            this.state.selectedCallback(`All ${this.state.selectionResult.successCount} selected books were succesfully ${destination}.`);
+            this.state.selectedCallback(`All ${this.state.selectionResult.successCount} selected books were succesfully ${destination}`);
           } else {
             //parcial successful because a book already were at the shelf or an error caused its failure
-            this.state.selectedCallback(`Only ${this.state.selectionResult.successCount} of ${this.state.selectionResult.totalCount} selected books were succesfully ${destination}. \n${this.state.selectionResult.stayedCount} of them already were at the shelf. ${this.state.selectionResult.errorCount === 0 ? 'No' : this.state.selectionResult.errorCount } errors ocurred.`);
+            this.state.selectedCallback(`Only ${this.state.selectionResult.successCount} of ${this.state.selectionResult.totalCount} selected books were succesfully ${destination} \n${this.state.selectionResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
           }
         } else {
           //Partial success of complete failure because a book already were at the shelf or an error caused its failure
-          this.state.selectedCallback(`None of ${this.state.selectionResult.totalCount} selected books were ${destination}. \n${this.state.selectionResult.stayedCount} of them already were at the shelf. ${this.state.selectionResult.errorCount === 0 ? 'No' : this.state.selectionResult.errorCount } errors ocurred.`);
+          this.state.selectedCallback(`None of ${this.state.selectionResult.totalCount} selected books were ${destination} \n${this.state.selectionResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
         }
       }
       //reset multi select state variables
@@ -214,12 +232,16 @@ class Shelves extends Component {
     }
   };
 
+  /**
+   * @description Creates the component UI
+   */
   render() {
     return (
       <div>
         <div className="list-books-title">
-          {/*  */}
+          {/* Book shelves page title */}
           <h1>MyReads</h1>
+          {/* Multiple selection checkbox and label */}
           <FormControlLabel style={{top: "0", right: "0", float: "right"}}
             control={
               <Checkbox
@@ -234,6 +256,7 @@ class Shelves extends Component {
           />
         </div>
         <div className="list-books-content">
+          {/* Loop over each shelf individually to create a Shelf component */}
           {Object.entries(this.props.shelves).map(([key, shelf]) => (
             <Shelf
               key={key}
@@ -244,6 +267,7 @@ class Shelves extends Component {
               handleMultiSelectCheck={this.handleMultiSelectBookCheck} />
           ))}
         </div>
+        {/* Map a new link Component to open the Search page */}
         <Link className="open-search" to="/search">Add a book</Link>
       </div>
     );

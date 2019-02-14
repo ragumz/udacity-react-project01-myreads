@@ -53,6 +53,8 @@ class MessageDialog extends Component {
 
   /**
    * @description React callback invoked when new props are to be received
+   *
+   * @param {object} nextProps The new props that will replace this.props
    */
   componentWillReceiveProps(nextProps) {
     //shows the dialog if there is any message text.
@@ -62,6 +64,9 @@ class MessageDialog extends Component {
     }
   };
 
+  /**
+   * @description Creates the component UI
+   */
   render() {
     return (
       <div>

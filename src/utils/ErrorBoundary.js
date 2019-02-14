@@ -39,6 +39,9 @@ class ErrorBoundary extends Component {
     this.setState({ hasError: true, error })
   };
 
+  /**
+   * @description Creates the component UI
+   */
   render() {
     if (this.state.hasError) {
       //if contains an error state, show modal dialog with its stack trace
