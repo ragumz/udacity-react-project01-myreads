@@ -43,7 +43,7 @@ To start using the web application right away:
     └── Shelves.js # React component to manage all the Shelves and its Books.
 ```
 
-## `Libraries and Dependencies`
+## Libraries and Dependencies
 
 The following libraries where added to this project through [npm install --save](https://docs.npmjs.com/cli/install):
 * [prop-types](https://www.npmjs.com/package/prop-types) - As instructed on the React Fundamentals course.
@@ -52,7 +52,7 @@ The following libraries where added to this project through [npm install --save]
 * [react-loading-overlay](https://www.npmjs.com/package/react-loading-overlay) - An UI overlay to wait for asynch process to end.
 * [react-star-ratings](https://www.npmjs.com/package/react-star-ratings) - A UI component to show stars from the Books' object 'averageRating' field.
 
-## `Main Page`
+## Main Page
 
 The main page (\) contains some other features besides the ones from the project requirements.
 By default it presents the books on their shelves, allowing to move those books between any shelf.
@@ -72,7 +72,7 @@ The new features added are:
 * The MessageDialog is a component to present text messages, shown only when there is a message.
 * Tried to document and comment almost every source code part.
 
-## `Search Page`
+## Search Page
 
 The search page (\search) contains almost the same new features explained on the Main Page section, besides the required features asked for the project. When cleaning the query text all the search book result will be clear, just as asked. Books without thumbnail images or authors are carefully treated.
 On the search page that the REST web service to search books by author or title is called and passed as props callback to child components.
@@ -82,7 +82,7 @@ Some new features added are:
 * All the new features reported for 'Main Page' applies to 'Search Page'. Besides that, the book update operations occurs over the book objects from each page and on the backend.
 * When a query does not return books from the REST web service backend search, a message dialog is shown to explain it.
 
-## `Caveats`
+## Caveats
 
 Some caveats that could be improved on future releases:
 * All React components of this project were created trying to follow the DO ONE THING principle and all good practices taught during the course, however due to React development unexperience, they may have grown more than expected.
