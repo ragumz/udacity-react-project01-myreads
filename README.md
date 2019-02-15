@@ -50,7 +50,7 @@ The following libraries where added to this project through [npm install --save]
 * [react-router-dom](https://www.npmjs.com/package/react-router-dom) - Needed to route creation as a project requirement.
 * [@material-ui/core](https://www.npmjs.com/package/@material-ui/core) - Used some UI components like TextField, Button, Checkbox, Dialog etc.
 * [react-loading-overlay](https://www.npmjs.com/package/react-loading-overlay) - An UI overlay to wait for asynch process to end.
-* [react-star-ratings](https://www.npmjs.com/package/react-star-ratings) - A UI component to show stars from the Books' object 'averageRating' field.
+* [react-star-ratings](https://www.npmjs.com/package/react-star-ratings) - An UI component to show stars from the Books' object 'averageRating' field.
 
 ## Main Page
 
