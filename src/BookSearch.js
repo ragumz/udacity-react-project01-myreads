@@ -35,11 +35,11 @@ const INIT_SEARCH = {
   /**
    * @description A collection of all selected books for batch update
    */
-  selectionBookIds: new Set(),
+  multiSelectBookIds: new Set(),
   /**
    * @description Objet to group book batch update processing counts
    */
-  selectionResult: {
+  multiSelectResult: {
     successCount: 0,
     stayedCount: 0,
     errorCount: 0,
@@ -48,11 +48,11 @@ const INIT_SEARCH = {
   /**
    * @description A text with the new selected Shelf identification for book batch update
    */
-  selectedShelfId: null,
+  multiSelectShelfId: null,
   /**
    * @description A callback function from the child to present messages to user
    */
-  selectedCallback: null
+  multiSelectCallback: null
 };
 
 
@@ -123,7 +123,7 @@ class BookSearch extends Component {
           });
         });
       } else {
-        message = `No book found with title or author using query '${query}'`;
+        message = `No book found with title or author using the query '${query}'. Please, use only valid search terms.`;
       }
     } finally {
       //assure the states in any case
@@ -207,9 +207,9 @@ class BookSearch extends Component {
     //multiple books shelf change action
     this.setState(() => ({
       //setting correct state to start mutliple book update
-      selectedShelfId: newShelfId,
-      selectedCallback: handleCallback,
-      selectionResult: {
+      multiSelectShelfId: newShelfId,
+      multiSelectCallback: handleCallback,
+      multiSelectResult: {
         successCount: 0,
         stayedCount: 0,
         errorCount: 0,
@@ -217,13 +217,13 @@ class BookSearch extends Component {
       },
       loading: true
     }), () => { //after setting the state, process the books and update them
-      if (this.state.selectionBookIds.size === 0) {
+      if (this.state.multiSelectBookIds.size === 0) {
         handleCallback('Select one or more books to move them between shelves.');
         return;
       }
       let messages = '';
       //get each selected Book
-      this.state.selectionBookIds.forEach((bookId) => {
+      this.state.multiSelectBookIds.forEach((bookId) => {
         //get the actual state reference
         const localBook = this.state.books.get(bookId);
         try {
@@ -253,15 +253,15 @@ class BookSearch extends Component {
    */
   handleMultiSelectCallback = (message, isSuccess) => {
     this.setState((currState) => ({
-      selectionResult: {
+      multiSelectResult: {
         //always update total book count state
-        totalCount: currState.selectionResult.totalCount+1,
+        totalCount: currState.multiSelectResult.totalCount+1,
         //update the successful count state
-        successCount: isSuccess === true ? currState.selectionResult.successCount+1 : currState.selectionResult.successCount,
+        successCount: isSuccess === true ? currState.multiSelectResult.successCount+1 : currState.multiSelectResult.successCount,
         //update the non moved book state
-        stayedCount: Commons.isNull(isSuccess) ? currState.selectionResult.stayedCount+1 : currState.selectionResult.stayedCount,
+        stayedCount: Commons.isNull(isSuccess) ? currState.multiSelectResult.stayedCount+1 : currState.multiSelectResult.stayedCount,
         //update the error count state
-        errorCount: isSuccess === false ? currState.selectionResult.errorCount+1 : currState.selectionResult.errorCount
+        errorCount: isSuccess === false ? currState.multiSelectResult.errorCount+1 : currState.multiSelectResult.errorCount
       }
     }), this.handleOnUpdateMultiSelectFinish);  //invoke the final callback to determine the end of the process
   };
@@ -272,46 +272,46 @@ class BookSearch extends Component {
    */
   handleOnUpdateMultiSelectFinish = () => {
     //while the total count is different from book selection size the batch update is in course
-    if (this.state.selectionResult.totalCount === this.state.selectionBookIds.size) {
+    if (this.state.multiSelectResult.totalCount === this.state.multiSelectBookIds.size) {
       //it may exists a child callback function to show the result messages
-      if (!Commons.isNull(this.state.selectedCallback)) {
+      if (!Commons.isNull(this.state.multiSelectCallback)) {
         let destination = '';
         //select the proper message regarding the shelf exchange
-        if (!Commons.isEmpty(this.state.selectedShelfId)
-              && this.state.selectedShelfId !== Constants.SHELF_ID_NONE) {
-          destination = `moved to shelf ${this.props.shelves[this.state.selectedShelfId].name}.`;
+        if (!Commons.isEmpty(this.state.multiSelectShelfId)
+              && this.state.multiSelectShelfId !== Constants.SHELF_ID_NONE) {
+          destination = `moved to shelf ${this.props.shelves[this.state.multiSelectShelfId].name}.`;
         } else {
           destination = 'removed from their shelves.';
         }
         let errorMessages = '';
-        if (this.state.selectionResult.errorCount > 0) {
-           errorMessages = `${this.state.selectionResult.errorCount} error(s) occurred.`;
+        if (this.state.multiSelectResult.errorCount > 0) {
+           errorMessages = `${this.state.multiSelectResult.errorCount} error(s) occurred.`;
         }
         //if there are any successful book updates
-        if (this.state.selectionResult.successCount > 0) {
-          if (this.state.selectionResult.successCount === this.state.selectionResult.totalCount) {
+        if (this.state.multiSelectResult.successCount > 0) {
+          if (this.state.multiSelectResult.successCount === this.state.multiSelectResult.totalCount) {
             //totally successful and all books updated
-            this.state.selectedCallback(`All ${this.state.selectionResult.successCount} selected books were succesfully ${destination}`);
+            this.state.multiSelectCallback(`All ${this.state.multiSelectResult.successCount} selected books were succesfully ${destination}`);
           } else {
             //parcial successful because a book already were at the shelf or an error caused its failure
-            this.state.selectedCallback(`Only ${this.state.selectionResult.successCount} of ${this.state.selectionResult.totalCount} selected books were succesfully ${destination} ${this.state.selectionResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
+            this.state.multiSelectCallback(`Only ${this.state.multiSelectResult.successCount} of ${this.state.multiSelectResult.totalCount} selected books were succesfully ${destination} ${this.state.multiSelectResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
           }
         } else {
           //Partial success of complete failure because a book already were at the shelf or an error caused its failure
-          this.state.selectedCallback(`None of ${this.state.selectionResult.totalCount} selected books were ${destination} ${this.state.selectionResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
+          this.state.multiSelectCallback(`None of ${this.state.multiSelectResult.totalCount} selected books were ${destination} ${this.state.multiSelectResult.stayedCount} of them already were at the shelf. ${errorMessages}`);
         }
       }
       //reset multi select state variables
       this.setState({
         multiSelect: false,
-        selectionResult: {
+        multiSelectResult: {
           successCount: 0,
           stayedCount: 0,
           errorCount: 0,
           totalCount: 0,
         },
-        selectedShelfId: null,
-        selectedCallback: null
+        multiSelectShelfId: null,
+        multiSelectCallback: null
       });
     }
   };
@@ -351,15 +351,15 @@ class BookSearch extends Component {
     const multiSelect = event.target.checked;
     this.setState(() => ({
       multiSelect,
-      selectionBookIds: new Set(),
-      selectionResult: {
+      multiSelectBookIds: new Set(),
+      multiSelectResult: {
         successCount: 0,
         stayedCount: 0,
         errorCount: 0,
         totalCount: 0,
       },
-      selectedShelfId: null,
-      selectedCallback: null
+      multiSelectShelfId: null,
+      multiSelectCallback: null
     }));
   };
 
@@ -378,9 +378,9 @@ class BookSearch extends Component {
     //update the book identifier Set, adding or removin the selected book
     this.setState((currState) => {
       if (isSelected === true) {
-        currState.selectionBookIds.add(book.id);
-      } else if (currState.selectionBookIds.has(book.id)) {
-        currState.selectionBookIds.delete(book.id);
+        currState.multiSelectBookIds.add(book.id);
+      } else if (currState.multiSelectBookIds.has(book.id)) {
+        currState.multiSelectBookIds.delete(book.id);
       }
       return currState;
     });
@@ -416,7 +416,7 @@ class BookSearch extends Component {
                   color="primary">
               </Checkbox>
               }
-              label="Multi Selection"
+              label="Multiple Selection"
             />
           </div>
           <div className="search-books-results">

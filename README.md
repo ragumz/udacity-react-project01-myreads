@@ -1,92 +1,117 @@
-# MyReads Project
+# MyReads Project of Rafael Araujo Gumz
 
-This is the starter template for the final assessment project for Udacity's React Fundamentals course. The goal of this template is to save you time by providing a static example of the CSS and HTML markup that may be used, but without any of the React code that is needed to complete the project. If you choose to start with this template, your job will be to add interactivity to the app by refactoring the static code in this template.
+This is MyReads web application project, developed for the final assessment project for Udacity's React Fundamentals course.
+The project web page contents were built with React, JSX, JS and CSS. They are dynamic and use all the static CSS and design suggested from the example project to save time.
 
-Of course, you are free to start this project from scratch if you wish! Just be sure to use [Create React App](https://github.com/facebookincubator/create-react-app) to bootstrap the project.
+## Building and Deploying
 
-## TL;DR
+It was developed and manullay tested in a NodeJS static server.
+To start using the web application right away:
+* Install all project dependencies with `npm install`.
+* Start the development server with `npm start`.
 
-To get started developing right away:
-
-* install all project dependencies with `npm install`
-* start the development server with `npm start`
-
-## What You're Getting
+## Project Files Structure
 ```bash
-├── CONTRIBUTING.md
 ├── README.md - This file.
-├── SEARCH_TERMS.md # The whitelisted short collection of available search terms for you to use with your app.
-├── package.json # npm package manager file. It's unlikely that you'll need to modify this.
+├── SEARCH_TERMS.md # The whitelisted short collection of available search terms to use with the app.
+├── package.json # npm package manager file. Some new dependecies were added.
 ├── public
-│   ├── favicon.ico # React Icon, You may change if you wish.
-│   └── index.html # DO NOT MODIFY
+│   ├── favicon.ico # React Icon wast not changed.
+│   └── index.html # Not modifind from the static example project.
 └── src
-    ├── App.css # Styles for your app. Feel free to customize this as you desire.
-    ├── App.js # This is the root of your app. Contains static HTML right now.
-    ├── App.test.js # Used for testing. Provided with Create React App. Testing is encouraged, but not required.
-    ├── BooksAPI.js # A JavaScript API for the provided Udacity backend. Instructions for the methods are below.
-    ├── icons # Helpful images for your app. Use at your discretion.
+    ├── icons # Helpful images for the app copied from the static example project.
     │   ├── add.svg
     │   ├── arrow-back.svg
     │   └── arrow-drop-down.svg
-    ├── index.css # Global styles. You probably won't need to change anything here.
-    └── index.js # You should not need to modify this file. It is used for DOM rendering only.
+    ├── utils
+    │   ├── BooksAPI.js # A JavaScript API for the provided Udacity backend.
+    │   ├── Commons.js # Some common functions to help solve common problems.
+    │   ├── Constants.js # The constant values to use along the application
+    │   ├── ErrorBoundary.js # React component to catch global React and JavaScript errors, log them into console and show a dialog.
+    │   └── MessageDialog.js # React component to show/hide a modal dialog window with a title, a message and buttons.
+    ├── App.css # Styles of the app copied from static example project. Some classes were customized.
+    ├── App.js # This is the root of the app. It contains the starters UI React components and the main books' shelves' data state.
+    ├── App.test.js # It was not used at this project stage, but will stay to future improvements.
+    ├── Book.js # React component to Render and manage a single book.
+    ├── BookDetailsDialog.js # React component to show a data sheet dialog window presenting the Book object field names and values.
+    ├── BookMenu.js # React component with a menu of actions to apply on each Book.
+    ├── BookSearch.js # React component to present fetched Books using a query on a REST web service operation from Udacity backend.
+    ├── index.css # Global styles of the app copied from static example project. Nothin was changed here.
+    ├── index.js # App component was nested into ErrorBoundary and BrowserRouter components.
+    ├── SearchInput.js # React component to manage the search query input.
+    ├── Shelf.js # React component to manage all the Books from a single Shelf.
+    └── Shelves.js # React component to manage all the Shelves and its Books.
 ```
 
-Remember that good React design practice is to create new JS files for each component and use import/require statements to include them where they are needed.
+### `Libraries Dependencies`
+
+The following libraries where added to this project through [npm install --save](https://docs.npmjs.com/cli/install):
+* [prop-types](https://www.npmjs.com/package/prop-types) - As instructed on the React Fundamentals course.
+* [react-router-dom](https://www.npmjs.com/package/react-router-dom) - Needed to route creation as a project requirement.
+* [@material-ui/core](https://www.npmjs.com/package/@material-ui/core) - Used some UI components like TextField, Button, Checkbox, Dialog etc.
+* [react-loading-overlay](https://www.npmjs.com/package/react-loading-overlay) - An UI overlay to wait for asynch process to end.
+* [react-star-ratings](https://www.npmjs.com/package/react-star-ratings) - A UI component to show stars from the Books' object 'averageRating' field.
+
+### `Main Page`
+
+The main page (\) contains some other features besides the ones from the project requirements.
+By default it presents the books on their shelves, allowing to move those books between any shelf.
+Moving to shelf "None" will remove the book from the source shelf, however it may be added again on any shelf from Search page.
+If <F5> key is pressed, the page contents of books on their shelves are not lost, but it relies on the "localStorage.token" from BookAPI.
+On the main page that the REST web service to load books is invoked, among with the book shelf update, passed as props callback function to child components.
+
+The new features added are:
+* A "Multiple Selection" checkbox on the right upper corner of the page, to allow for batch update of many books, from and to any shelf. By checking it, a checkbox will be draw on the left upper corner of each Book component. Allowing to select all the books wanted and open any book menu to see the options, even the ones not selected. It manages to put each book on the right shelf, even it is the same or the "None" one. At the end a message will be presented with the result and counts of the batch shelf book moving.
+* Each shelf has an specific menu color to made it easy to find their books visually: "Read" is Green | "Want to Read" is Yellow | "Currently Reading" is Red | "None" is Gray.
+* A star rating component to show the readers average ratings, whether the Book object has the value, and the amount of ratings are placed bellow the authors label.
+* The "Move this Book to Shelf..." menu presents the current book shelf selection with a bold font.
+* A menu option to show every field value from Book object on 'Data Sheet' option.
+* A menu option to open the Book information page on another browser tab.
+* A menu option to open the Book preview content page on another browser tab.
+* The LoadingOverlay component is the parent component that is shown or hidden through its "loading" state when backend services are executed.
+* The MessageDialog is a component to present text messages, shown only when there is a message.
+* Tried to document and comment almost every source code part.
+
+### `Search Page`
+
+The search page (\search) contains almost the same new features explained on the Main Page section, besides the required features asked for the project. When cleaning the query text all the search book result will be clear, just as asked. Books without thumbnail images or authors are carefully treated.
+On the search page that the REST web service to search books by author or title is called and passed as props callback to child components.
+
+Some new features added are:
+* To create a more performatic search executed on REST web service at the Udacity backend, it was decided to type the query and then press <ENTER> to start the asynchronous search. If it is a required feature, it may be replaced by onChange events of the text input UI component, but in my humble opinion, it is better this way.
+* All the new features reported for 'Main Page' applies to 'Search Page'. Besides that, the book update operations occurs over the book objects from each page and on the backend.
+* When a query does not return books from the REST web service backend search, a message dialog is shown to explain it.
+
+### `Caveats and Future Releases`
+
+Some caveats that could be improved on future releases:
+* All React components of this project were created trying to follow the DO ONE THING principle and all good practices taught during the course, however due to React development unexperience, they may have grown more than expected.
+* The Shelves.js and BookSearch.js have their own book object Map collection. Following the DOT and separting concerns, the search result books are segregated from the main shelves' books. It means that some objects are shared during the update process or just signaled to be on a "virtual" shelf on search page, duplicating in different book instances. However, they are kept persistent on each component books collection. This way the "Main Page" do not need to load the books from backend every time, only once actually, and it applies because is a single user system.
+* The multiple selection and batch update was added after the single book update worked, so, its source code became repetitive on Shelves and BookSearch components, mainly due to different books' Map collection.
+* No ordering algorithm were applied to any Array, Map or Set content.
+* Should be added a menu and menu itens using Material UI components, to enrich the UX.
+* Should be improved the CSS.
+
+## Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 ## Backend Server
 
-To simplify your development process, we've provided a backend server for you to develop against. The provided file [`BooksAPI.js`](src/BooksAPI.js) contains the methods you will need to perform necessary operations on the backend:
+To simplify the development process, Udacity provided a backend server to develop against. The provided file [`BooksAPI.js`](src/utils/BooksAPI.js) contains the methods to perform necessary operations on the backend:
 
 * [`getAll`](#getall)
 * [`update`](#update)
 * [`search`](#search)
 
-### `getAll`
+## Important from Udacity
 
-Method Signature:
+The backend API uses a fixed set of cached search results and is limited to a particular set of search terms, which can be found in [SEARCH_TERMS.md](SEARCH_TERMS.md). That list of terms are the _only_ terms that will work with the backend, so don't be surprised the searches for Basket Weaving or Bubble Wrap don't come back with any results.
 
-```js
-getAll()
-```
+## Final Notes
 
-* Returns a Promise which resolves to a JSON object containing a collection of book objects.
-* This collection represents the books currently in the bookshelves in your app.
-
-### `update`
-
-Method Signature:
-
-```js
-update(book, shelf)
-```
-
-* book: `<Object>` containing at minimum an `id` attribute
-* shelf: `<String>` contains one of ["wantToRead", "currentlyReading", "read"]  
-* Returns a Promise which resolves to a JSON object containing the response data of the POST request
-
-### `search`
-
-Method Signature:
-
-```js
-search(query)
-```
-
-* query: `<String>`
-* Returns a Promise which resolves to a JSON object containing a collection of a maximum of 20 book objects.
-* These books do not know which shelf they are on. They are raw results only. You'll need to make sure that books have the correct state while on the search page.
-
-## Important
-The backend API uses a fixed set of cached search results and is limited to a particular set of search terms, which can be found in [SEARCH_TERMS.md](SEARCH_TERMS.md). That list of terms are the _only_ terms that will work with the backend, so don't be surprised if your searches for Basket Weaving or Bubble Wrap don't come back with any results.
-
-## Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). You can find more information on how to perform common tasks [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+* This repository contains a particular React project code for Udacity instructors evaluation only.
+* Students are encouraged to try developing this exercise by themselves and "NOT TO COPY" the source codes.
+* All the text, comments and documentation was made in English, to practice and foreseeing future Udacity courses.
+* The Git commit messages were short and clean.
+* All the source code were produced between 20 and 00:30 hours after a long day of 9 hours of architecture and programming and on weekends, when my 1 year old daughter allowed. That is student life!

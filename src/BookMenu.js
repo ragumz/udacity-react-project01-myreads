@@ -132,7 +132,7 @@ class BookMenu extends Component {
             className="book-shelf-changer-italic"
             value={ACTION_DATA}
             disabled>
-            More Book details
+            More Book Details
           </option>
           <option
             value={ACTION_DETAILS}

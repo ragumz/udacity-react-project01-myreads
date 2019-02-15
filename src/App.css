@@ -33,7 +33,7 @@ body, .app {
   padding: 0 10px 20px;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 600px; min-height: 400px) {
   .bookshelf {
     padding: 0 20px 40px;
   }
@@ -46,8 +46,8 @@ body, .app {
 
 .bookshelf-books {
   text-align: center;
-  max-height: 350px;
-  overflow-y: auto;
+  /*max-height: 350px;
+  overflow-y: auto;*/
 }
 
 .open-search {
