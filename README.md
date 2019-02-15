@@ -54,7 +54,7 @@ The following libraries where added to this project through [npm install --save]
 
 ## Main Page
 
-The main page (\) contains some other features besides the ones from the project requirements.
+The main page ('\') contains some other features besides the ones from the project requirements.
 By default it presents the books on their shelves, allowing to move those books between any shelf.
 Moving to shelf "None" will remove the book from the source shelf, however it may be added again on any shelf from Search page.
 If <F5> key is pressed, the page contents of books on their shelves are not lost, but it relies on the "localStorage.token" from BookAPI.
@@ -74,7 +74,7 @@ The new features added are:
 
 ## Search Page
 
-The search page (\search) contains almost the same new features explained on the Main Page section, besides the required features asked for the project. When cleaning the query text all the search book result will be clear, just as asked. Books without thumbnail images or authors are carefully treated.
+The search page ('\search') contains almost the same new features explained on the Main Page section, besides the required features asked for the project. When cleaning the query text all the search book result will be clear, just as asked. Books without thumbnail images or authors are carefully treated.
 On the search page that the REST web service to search books by author or title is called and passed as props callback to child components.
 
 Some new features added are:
